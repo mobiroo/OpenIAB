@@ -15,12 +15,14 @@
 
 package org.onepf.oms.appstore.googleUtils;
 
+import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import android.content.pm.ResolveInfo;
+
 import org.json.JSONException;
 import org.onepf.oms.Appstore;
 import org.onepf.oms.AppstoreInAppBillingService;
@@ -471,7 +473,25 @@ public class IabHelper implements AppstoreInAppBillingService {
         int responseCode = getResponseCodeFromIntent(data);
         String purchaseData = data.getStringExtra(RESPONSE_INAPP_PURCHASE_DATA);
         String dataSignature = data.getStringExtra(RESPONSE_INAPP_SIGNATURE);
-
+        String appstoreName = appstore.getAppstoreName();
+        if (appstoreName.equals(OpenIabHelper.NAME_MOBIROO)) {
+        	if (resultCode == BILLING_RESPONSE_RESULT_OK && responseCode == BILLING_RESPONSE_RESULT_OK) {
+                processPurchaseSuccess(data, purchaseData, dataSignature);
+            } else if (resultCode == BILLING_RESPONSE_RESULT_OK) {
+                // result code was OK, but in-app billing response was not OK.
+                processPurchaseFail(responseCode);
+            } else if (resultCode == BILLING_RESPONSE_RESULT_USER_CANCELED) {
+                logDebug("Purchase canceled - Response: " + getResponseDesc(responseCode));
+                result = new IabResult(IABHELPER_USER_CANCELLED, "User canceled.");
+                if (mPurchaseListener != null) mPurchaseListener.onIabPurchaseFinished(result, null);
+            } else {
+                logError("Purchase failed. Result code: " + Integer.toString(resultCode)
+                        + ". Response: " + getResponseDesc(responseCode));
+                result = new IabResult(IABHELPER_UNKNOWN_PURCHASE_RESPONSE, "Unknown purchase response.");
+                if (mPurchaseListener != null) mPurchaseListener.onIabPurchaseFinished(result, null);
+            }
+        	return true;
+        }
         if (resultCode == Activity.RESULT_OK && responseCode == BILLING_RESPONSE_RESULT_OK) {
             processPurchaseSuccess(data, purchaseData, dataSignature);
         } else if (resultCode == Activity.RESULT_OK) {
