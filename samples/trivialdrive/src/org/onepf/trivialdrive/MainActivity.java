@@ -114,6 +114,7 @@ public class MainActivity extends Activity {
         OpenIabHelper.mapSku(SKU_PREMIUM, "Appland", "org.onepf.trivialdrive.premium");
 		OpenIabHelper.mapSku(SKU_PREMIUM, OpenIabHelper.NAME_NOKIA, "1023608");
 		OpenIabHelper.mapSku(SKU_PREMIUM, "SlideME", "slideme_sku_premium");
+        OpenIabHelper.mapSku(SKU_PREMIUM, OpenIabHelper.NAME_MOBIROO, "mobiroo_sku_premium");
 
         OpenIabHelper.mapSku(SKU_GAS, OpenIabHelper.NAME_AMAZON, "org.onepf.trivialdrive.amazon.gas");
         OpenIabHelper.mapSku(SKU_GAS, OpenIabHelper.NAME_TSTORE, "tstore_sku_gas");
@@ -122,6 +123,7 @@ public class MainActivity extends Activity {
         OpenIabHelper.mapSku(SKU_GAS, "Appland", "org.onepf.trivialdrive.gas");
 		OpenIabHelper.mapSku(SKU_GAS, OpenIabHelper.NAME_NOKIA, "1023609");
 		OpenIabHelper.mapSku(SKU_GAS, "SlideME", "slideme_sku_gas");
+        OpenIabHelper.mapSku(SKU_GAS, OpenIabHelper.NAME_MOBIROO, "mobiroo_sku_gas");
 
         OpenIabHelper.mapSku(SKU_INFINITE_GAS, OpenIabHelper.NAME_AMAZON, "org.onepf.trivialdrive.amazon.infinite_gas");
         OpenIabHelper.mapSku(SKU_INFINITE_GAS, OpenIabHelper.NAME_TSTORE, "tstore_sku_infinite_gas");
@@ -129,6 +131,7 @@ public class MainActivity extends Activity {
         OpenIabHelper.mapSku(SKU_INFINITE_GAS, "com.yandex.store", "org.onepf.trivialdrive.infinite_gas");
 		OpenIabHelper.mapSku(SKU_INFINITE_GAS, OpenIabHelper.NAME_NOKIA, "1023610");
 		OpenIabHelper.mapSku(SKU_INFINITE_GAS, "SlideME", "slideme_sku_inifinite_gas");
+        //OpenIabHelper.mapSku(SKU_INFINITE_GAS, OpenIabHelper.NAME_MOBIROO, "mobiroo_sku_infinite_gas");
     }
     
     // (arbitrary) request code for the purchase flow
@@ -173,6 +176,7 @@ public class MainActivity extends Activity {
         String YANDEX_PUBLIC_KEY        = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs4NKNVt1lC97e5qr5qIK31WKh470ihgFdRSiV/8kdKtdk2gsLD70AFPFZ0py/OOyZflDjTOya809mU0lsWOxrrGZBRFqQKbvCPh9ZIMVZc79Uz0UZfjBy/n2h4bc0Z5VeBIsnDNh4DCD/XlHYwLIf6En+uPkKZwD3lG2JW4q4Hmuc3HYbuagv+hMexEG/umjbHTRq5rJ+rJ2LyYQs5Kdi/UZ5JKjsk9CuYrzMi9TqOqc9fDG19mfqqr4lfzvKneGIG11c3d1yUNX/MmSE43QYPPWNNKgGLha1AbS7RvtbWzEviiEZ0wjQkRSu4QAXhUurzK75eWDBN2KiJK9mlI1lQIDAQAB";
         String APPLAND_PUBLIC_KEY       = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC5idC9c24V7a7qCJu7kdIyOZskW0Rc7/q+K+ujEXsUaAdb5nwmlOJqpoJeCh5Fmq5A1NdF3BwkI8+GwTkH757NBZASSdEuN0pLZmA6LopOiMIy0LoIWknM5eWMa3e41CxCEFoMv48gFIVxDNJ/KAQAX7+KysYzIdlA3W3fBXXyGQIDAQAB";
         String SLIDEME_PUBLIC_KEY		= "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq6rFm2wb9smbcowrfZHYw71ISHYxF/tG9Jn9c+nRzFCVDSXjvedBxKllw16/GEx9DQ32Ut8azVAznB2wBDNUsSM8nzNhHeCSDvEX2/Ozq1dEq3V3DF4jBEKDAkIOMzIBRWN8fpA5MU/9m8QD9xkJDfP7Mw/6zEMidk2CEE8EZRTlpQ8ULVgBlFISd8Mt9w8ZFyeTyJTZhF2Z9+RZN8woU+cSXiVRmiA0+v2R8Pf+YNJb9fdV5yvM8r9K1MEdRaXisJyMOnjL7H2mZWigWLm7uGoUGuIg9HHi09COBMm3dzAe9yLZoPSG75SvYDsAZ6ms8IYxF6FAniNqfMOuMFV8zwIDAQAB";
+        //String MOBIROO_PUBLIC_KEY       = ""; //< unsupported at this time.
 
         // Some sanity checks to see if the developer (that's you!) really followed the
         // instructions to run this sample (don't put these checks on your app!)
@@ -192,6 +196,7 @@ public class MainActivity extends Activity {
         storeKeys.put("com.yandex.store", YANDEX_PUBLIC_KEY);
         storeKeys.put("Appland", APPLAND_PUBLIC_KEY);
         storeKeys.put("SlideME", SLIDEME_PUBLIC_KEY);
+        //storeKeys.put(OpenIabHelper.NAME_MOBIROO, MOBIROO_PUBLIC_KEY); //< unsupported at this time.
 
         mHelper = new OpenIabHelper(this, storeKeys);
         
