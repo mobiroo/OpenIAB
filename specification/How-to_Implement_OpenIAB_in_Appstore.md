@@ -14,7 +14,7 @@ Step 1. Native Client. (If you have no native client, OpenIAB cannot be integrat
 -------------
 
 To support OpenIAB in your native application two bindable services must be implemented with  following AIDL interfaces:
- 
+
 **IOpenAppstore.aidl** - interface to discover your store application by OpenIAB and connect developer’s application with your store.
 
 
@@ -32,25 +32,25 @@ Store application must provide a bindable service that handles `org.onepf.oms.op
 Following methods must be implemented to work with the OpenIAB correctly:
 
 #### String getAppstoreName();
-Every OpenStore implementation must provide their unique name. It is required for OpenId to map developer’s In-App items (SKU) to specific market.  
+Every OpenStore implementation must provide their unique name. It is required for OpenId to map developer’s In-App items (SKU) to specific market.
 
 **Uniqueness.** It is strictly required to have unique name here to OpenIAB works properly, so it is recomended to use name like `com.companyname.storename`.
 
 #### boolean isPackageInstaller(String packageName);
-Must return `true` if OpenStore is installer of package described by packageName. By installer means that package was installed or updated by Store application. 
+Must return `true` if OpenStore is installer of package described by packageName. By installer means that package was installed or updated by Store application.
 
 #### boolean isBillingAvailable(String packageName);
-Must return `true` if application with packageName is listed on OpenStore backend and In-App items for app are published  and ready for use. 
+Must return `true` if application with packageName is listed on OpenStore backend and In-App items for app are published  and ready for use.
 
 #### int getPackageVersion(String packageName);
 Must return version of application with packageName is listed on OpenStore backend for current device.
 
 ####Intent getBillingServiceIntent();
-Should return intent to be used for binding IOpenInAppBillingService. 
+Should return intent to be used for binding IOpenInAppBillingService.
 
-**Null Intent.** This method returns `null` means that Store doesn’t support In-App billing. In that case any call of `isBillingAvailable()` must return `false`;  
+**Null Intent.** This method returns `null` means that Store doesn’t support In-App billing. In that case any call of `isBillingAvailable()` must return `false`;
 
-#### Intent getProductPageIntent(String packageName); 
+#### Intent getProductPageIntent(String packageName);
 Should return intent to show application page in Store Application. This method is optional, return `null` if you don’t need to implement this feature.
 
 #### Intent getRateItPageIntent(String packageName);
@@ -71,7 +71,7 @@ Following methods must be implemented to work with the OpenIAB correctly:
 
 
 #### int isBillingSupported(int apiVersion, String packageName, String type);
-Checks support for the requested API version, package and in-app type (could be "inapp" for one-time purchases or "subs" for subscriptions). 
+Checks support for the requested API version, package and in-app type (could be "inapp" for one-time purchases or "subs" for subscriptions).
 
 |name|value|description|
 |----|-----|-----------|
@@ -99,19 +99,19 @@ Must return Bundle containing the following key-value pairs
 
 ###### JSON sample of sku details:
 ```
-{ 
-	"productId" : "exampleSku", 
-	"type" : "inapp", 
+{
+	"productId" : "exampleSku",
+	"type" : "inapp",
 	"price" : "$5.00",
-	"title : "Example Title", 
-	"description" : "This is an example description" 
+	"title : "Example Title",
+	"description" : "This is an example description"
 }
 ```
 
 
 
 #### Bundle getBuyIntent(int apiVersion, String packageName, String sku, String type, String developerPayload);
-Returns a pending intent to launch the purchase flow for an in-app item by providing a SKU, the type, a unique purchase token and an optional developer payload.          
+Returns a pending intent to launch the purchase flow for an in-app item by providing a SKU, the type, a unique purchase token and an optional developer payload.
 
 |name|value|description|
 |----|-----|-----------|
@@ -125,7 +125,7 @@ Returns a pending intent to launch the purchase flow for an in-app item by provi
 
 Must return Bundle containing the following key-value pairs
 * "RESPONSE_CODE" with int value, RESULT_OK(0) if success, other response codes on failure as listed above.
-* "BUY_INTENT" - PendingIntent to start the purchase flow. 
+* "BUY_INTENT" - PendingIntent to start the purchase flow.
 
 **Purchase Flow.** UI flow must be implemented in Native Client to handle in-app purchase. The Pending intent should be launched by developer with `startIntentSenderForResult`. When purchase flow has completed, the `onActivityResult()` will give a resultCode of OK or CANCELED. If the purchase is successful, the result data will contain the following key-value pairs
 * "RESPONSE_CODE" with int value, RESULT_OK(0) if success, other response codes on failure as listed above.
@@ -136,13 +136,13 @@ Must return Bundle containing the following key-value pairs
 ```
 {
 	"orderId":"12999763169054705758.1371079406387615",
-	"packageName":"com.example.app", 
-	"productId":"exampleSku", 
-	"purchaseTime":1345678900000, 
-	"purchaseToken" : "122333444455555", 
-	"developerPayload":"example developer payload" 
+	"packageName":"com.example.app",
+	"productId":"exampleSku",
+	"purchaseTime":1345678900000,
+	"purchaseToken" : "122333444455555",
+	"developerPayload":"example developer payload"
 }
-```    
+```
 
 #### Bundle getPurchases(int apiVersion, String packageName, String type, String continuationToken);
 Returns the current SKUs owned by the user of the type and package name specified along with purchase information and a signature of the data to be validated.
@@ -154,7 +154,7 @@ Returns the current SKUs owned by the user of the type and package name specifie
 |type|string|the type of the in-app items being requested ("inapp" or "subs").|
 |continuationToken|string|to be set as null for the first call, if the number of owned skus are too many, a continuationToken is returned in the response bundle. This method can be called again with the continuation token to get the next set of owned skus.|
 
-     
+
 Must return Bundle containing the following key-value pairs
 * "RESPONSE_CODE" - int value, RESULT_OK(0) if success, other response codes on failure.
 * "INAPP_PURCHASE_ITEM_LIST" - StringArrayList containing the list of SKUs
@@ -183,7 +183,7 @@ Step 2. Support on BackEnd
 -------------
 When developer register new application private/public RSA keys need to be generated. Every purchase need to be signed using private key. Public key should be provided to a developer of the application to verify purchase.
 
-Appstore backend should provide enough information to Native Client to implement services defined on Step 1.  
+Appstore backend should provide enough information to Native Client to implement services defined on Step 1.
 
 Step 3. Server API for purchases and subscriptions verification
 -------------
@@ -205,9 +205,9 @@ GET https://<Your API server address>/{packageName}/inapp/{productId}/purchases/
 |productId|string|The inapp product SKU (for example, 'com.some.thing.inapp1').|
 |token|string|The token provided to the user's device when the inapp product was purchased.|
 
-###### Response 
-If successful, this method should return response as JSON string in the following format 
- 
+###### Response
+If successful, this method should return response as JSON string in the following format
+
 ```
 {
 	"kind": "androidpublisher#inappPurchase",
@@ -242,9 +242,9 @@ GET https://<Your API server address>/{packageName}/subscriptions/{subscriptionI
 |subscriptionId|string|The purchased subscription ID (for example, 'monthly001').|
 |token|string|The token provided to the user's device when the subscription was purchased.|
 
-###### Response 
- If successful, this method should return response as JSON string in the following format 
- 
+###### Response
+ If successful, this method should return response as JSON string in the following format
+
 ```
 {
 	"kind": "androidpublisher#inappPurchase",
@@ -277,7 +277,7 @@ POST https://<Your API server address>/{packageName}/subscriptions/{subscription
 |subscriptionId|string|The purchased subscription ID (for example, 'monthly001').|
 |token|string|The token provided to the user's device when the subscription was purchased.|
 
-###### Response 
+###### Response
 If successful, this method should returns an empty response body.
 
 #### Authorization
@@ -288,4 +288,4 @@ Two possible ways of using token must be supported:
 
 * As query parameter `https://<Your API server address>/...?access_token=...`
 * As `Authorization` header of the request
-  
+
