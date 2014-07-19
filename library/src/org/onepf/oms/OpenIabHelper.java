@@ -1227,8 +1227,11 @@ public class OpenIabHelper {
          * <p>
          * Receipt could be verified in {@link OnIabPurchaseFinishedListener#onIabPurchaseFinished()}
          * using {@link Purchase#getOriginalJson()} and {@link Purchase#getSignature()}
+         * <p>
+         * Note: Mobiroo does not support signing of receipts at this time. Please ensure that
+         * verifyMode is set to VERIFY_SKIP.
          */
-        public int verifyMode = VERIFY_EVERYTHING;
+        public int verifyMode = VERIFY_SKIP; // VERIFY_EVERYTHING; /* <-- Original Setting. */
         /**
          * Verify signatures in any store. 
          * <p>
