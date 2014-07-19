@@ -303,6 +303,32 @@ SlideME
     adb install -i com.slideme.sam.manager /path/to/YourApp.apk
     ```
 
+Mobiroo
+-------------
+1. In the AndroidManifest.xml add the billing permission
+
+    ```xml
+     <uses-permission android:name="org.onepf.openiab.permission.BILLING" />
+    ```
+
+2. If you're using the ```onepf``` version of OpenIAB, you need to disable the signature checking. If you use the ```Mobiroo``` version, VERIFY_SKIP is the default behaviour.
+
+    ```java
+    Options opts = new OpenIabHelper.Options();
+    opts.verifyMode = Options.VERIFY_SKIP;
+    mHelper = new OpenIabHelper(context, opts);
+    ```
+
+3. Map the SKUs if required.
+
+    ```java
+    OpenIabHelper.mapSku(SKU_PREMIUM, OpenIabHelper.NAME_MOBIROO, "mobiroo_sku_premium");
+    OpenIabHelper.mapSku(SKU_GAS, OpenIabHelper.NAME_MOBIROO, "mobiroo_sku_gas");
+    ```
+
+4. To test your application with Mobiroo, go to the Mobiroo Portal site and follow the testing instructions found in the documentation section.
+
+
 Fortumo: carrier billing and NOOK
 =================================
 
