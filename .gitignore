@@ -174,3 +174,10 @@ pip-log.txt
 .gradletasknamecache
 .gradle/
 build/
+
+#############
+## Android / Java
+#############
+
+*/gen
+*/*/gen
