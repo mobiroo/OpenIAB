@@ -145,6 +145,7 @@ public class OpenIabHelper {
     public static final String NAME_FORTUMO = "com.fortumo.billing";
     public static final String NAME_YANDEX = "com.yandex.store";
     public static final String NAME_NOKIA = "com.nokia.nstore";
+    public static final String NAME_MOBIROO = "com.mobiroo.xgen";
 
     /** 
      * NOTE: used as sync object in related methods<br>
