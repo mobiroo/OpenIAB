@@ -874,6 +874,10 @@ public class OpenIabHelper {
 
     public boolean subscriptionsSupported() {
         checkSetupDone("subscriptionsSupported");
+        String storeName = mAppstore.getAppstoreName();
+        if (storeName.equals(OpenIabHelper.NAME_MOBIROO)) {
+            return false; //< Subscriptions unsupported at this time.
+        }
         return mAppstoreBillingService.subscriptionsSupported();
     }
 
