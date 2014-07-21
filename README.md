@@ -304,7 +304,10 @@ SlideME
     ```
 
 Mobiroo
--------------
+=======
+
+General Steps:
+--------------
 1. In the AndroidManifest.xml add the billing permission
 
     ```xml
@@ -319,7 +322,8 @@ Mobiroo
     mHelper = new OpenIabHelper(context, opts);
     ```
 
-3. Map the SKUs if required.
+3. Map the SKUs, if required, like this:
+https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L109
 
     ```java
     OpenIabHelper.mapSku(SKU_PREMIUM, OpenIabHelper.NAME_MOBIROO, "mobiroo_sku_premium");
@@ -327,6 +331,13 @@ Mobiroo
     ```
 
 4. To test your application with Mobiroo, go to the Mobiroo Portal site and follow the testing instructions found in the documentation section.
+
+Important Caveats / Notes:
+--------------------------
+
+* Mobiroo does NOT support subscription In-App Purchases at this time.
+* Mobiroo does NOT track the use of consumables. The consume() method will always return RESULT_OK, but do nothing.
+* When your app requests the list of previous transactions; you will receive both entitlements *and* consumables (regardless if the consumable has been used up already or not).
 
 
 Fortumo: carrier billing and NOOK
