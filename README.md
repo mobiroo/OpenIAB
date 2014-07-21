@@ -1,10 +1,10 @@
 How To add OpenIAB into an app
 =====
 1. Download the latest version of OpenIAB.jar from http://www.onepf.org/openiab and attach it to the project.
-Or clone the library `git clone https://github.com/onepf/OpenIAB.git` and add /library as a Library Project.
+Or clone the library `git clone https://github.com/mobiroo/OpenIAB.git` and add /library as a Library Project.
 
 2. Map Google Play SKUs to Yandex/Amazon/etc SKUs like this:
-https://github.com/onepf/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L109
+https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L109
 
 3. Instantiate `new OpenIabHelper`  and call `helper.startSetup()`.
 When setup is done call  `helper.queryInventory()`
@@ -21,10 +21,10 @@ When setup is done call  `helper.queryInventory()`
               }
       });
     ```
-https://github.com/onepf/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L196
+https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L196
 
 4. Handle the results of `helper.queryInventory()` in an inventory listener and update UI to show what was purchased
-https://github.com/onepf/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L223
+https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L223
 
 5. To process purchases you need to override `onActivityResult()` of your Activity
     ```java
@@ -35,16 +35,16 @@ https://github.com/onepf/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/
        }
     ```
 When the user requests purchase of an item, call  `helper.launchPurchaseFlow()`
-https://github.com/onepf/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L294
+https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L294
 and handle the results with the listener
-https://github.com/onepf/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L396
+https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L396
 
 6. If the user has purchased a consumable item, call  ``` helper.consume() ```
 to exclude it from the inventory. If the item is not consumed, a store supposes it as non-consumable item and doesn't allow to purchase it one more time. Also it will be returned by ``` helper.queryInventory() ``` next time
-https://github.com/onepf/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L415
+https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L415
 
 7. Specify keys for different stores like this:
-https://github.com/onepf/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L188
+https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L188
 
 8. Add the required permissions to the AndroidManifest.xml
 
@@ -339,7 +339,7 @@ One service corresponds to one price, e.g. for 3 in-apps with different prices y
 
 OpenIAB setup
 -------------
-1. Make sure that <a href="https://github.com/onepf/OpenIAB/blob/master/library/libs/FortumoInApp-android-9.1.2-o.jar">FortumoInApp-android-9.1.2-o.jar</a> is attached to the project.
+1. Make sure that <a href="https://github.com/mobiroo/OpenIAB/blob/master/library/libs/FortumoInApp-android-9.1.2-o.jar">FortumoInApp-android-9.1.2-o.jar</a> is attached to the project.
 
 2. In the AndroidManifest.xml add the following permissions
 
@@ -387,7 +387,7 @@ OpenIAB setup
 4. Add <a href="https://github.com/onepf/AppDF/blob/xsd-for-inapps/specification/inapp-description.xsd">inapps_products.xml</a> (in-app products description in terms similar to Google Play) and
 <a href="https://github.com/onepf/AppDF/blob/xsd-for-inapps/specification/fortumo-products-description.xsd">fortumo_inapps_details.xml</a> (data about your Fortumo services,
 need to be copy-pasted from <a href="http://developers.fortumo.com/getting-started/dashboard-and-reporting/">Dashboard.</a>) files to the assets folder.
-You can find a sample <a href="https://github.com/onepf/OpenIAB/tree/master/samples/trivialdrive/assets">here.</a>
+You can find a sample <a href="https://github.com/mobiroo/OpenIAB/tree/master/samples/trivialdrive/assets">here.</a>
 Example of inapp-products.xml
 
      ```xml
@@ -493,9 +493,9 @@ Current Status
 =====
 OpenIAB SDK is used in production by wide variety of application and games. OpenIAB packages are available for Android apps and games based on Unity3d or Marmalade SDK. OpenIAB protocol is implemented by several Appstores.
 
-We have some samples that works in any Appstore in our [samples folder](https://github.com/onepf/OpenIAB/tree/master/samples). To find differences between TrivialDrive provided by Google and TrivialDrive with OpenIAB, please check our [sample](https://github.com/onepf/OpenIAB/tree/master/samples/trivialdrive). It demonstrates what changes need to be done to work with all Appstores and Carrier Billing.
+We have some samples that works in any Appstore in our [samples folder](https://github.com/mobiroo/OpenIAB/tree/master/samples). To find differences between TrivialDrive provided by Google and TrivialDrive with OpenIAB, please check our [sample](https://github.com/mobiroo/OpenIAB/tree/master/samples/trivialdrive). It demonstrates what changes need to be done to work with all Appstores and Carrier Billing.
 
-If you an Appstore developer and want to know how to integrate OpenIAB protocol in your Appstore, please start with our [Step-By-Step How-To](https://github.com/onepf/OpenIAB/blob/master/specification/How-to_Implement_OpenIAB_in_Appstore.md)
+If you an Appstore developer and want to know how to integrate OpenIAB protocol in your Appstore, please start with our [Step-By-Step How-To](https://github.com/mobiroo/OpenIAB/blob/master/specification/How-to_Implement_OpenIAB_in_Appstore.md)
 
 Basic Principles
 =====
@@ -517,11 +517,11 @@ and developers have to integrate all these different APIs in their apps.
 How Can I Help?
 =====
 
-* If you know about issues we missed - please, let us know in <a href="https://github.com/onepf/OpenIAB/issues">Issues on GitHub</a>
-* If you have contacts with Appstore you like, ask them to implement <a href="https://github.com/onepf/OpenIAB/blob/master/specification/How-to_Implement_OpenIAB_in_Appstore.md">OpenIAB</a> on their side
-* If you are an Android app developer check <a href="https://github.com/onepf/OpenIAB/issues?state=open">the list of open tasks</a>, see if any of these tasks interests you and comment it. <a href="https://github.com/onepf/OpenIAB">Fork OpenIAB</a> on GitHub and submit your code</li>
-* If you are an Appstore and already support In-App Billing we will be happy to meet with your API and find best way to make it compatible with OpenIAB. Please, raise an <a href="https://github.com/onepf/OpenIAB/issues?state=open">Issue</a> to let us know</li>
-* If you are an appstore that does not yet support in-app billing, but plans to support it, then we will be glad to help you with OpenIAB API. Please check our <a href="https://github.com/onepf/OpenIAB/blob/master/specification/How-to_Implement_OpenIAB_in_Appstore.md">How-To</a> and contact us to get deeper explanation of questions you have by raising an <a href="https://github.com/onepf/OpenIAB/issues?state=open">Issue</a></li>
+* If you know about issues we missed - please, let us know in <a href="https://github.com/mobiroo/OpenIAB/issues">Issues on GitHub</a>
+* If you have contacts with Appstore you like, ask them to implement <a href="https://github.com/mobiroo/OpenIAB/blob/master/specification/How-to_Implement_OpenIAB_in_Appstore.md">OpenIAB</a> on their side
+* If you are an Android app developer check <a href="https://github.com/mobiroo/OpenIAB/issues?state=open">the list of open tasks</a>, see if any of these tasks interests you and comment it. <a href="https://github.com/mobiroo/OpenIAB">Fork OpenIAB</a> on GitHub and submit your code</li>
+* If you are an Appstore and already support In-App Billing we will be happy to meet with your API and find best way to make it compatible with OpenIAB. Please, raise an <a href="https://github.com/mobiroo/OpenIAB/issues?state=open">Issue</a> to let us know</li>
+* If you are an appstore that does not yet support in-app billing, but plans to support it, then we will be glad to help you with OpenIAB API. Please check our <a href="https://github.com/mobiroo/OpenIAB/blob/master/specification/How-to_Implement_OpenIAB_in_Appstore.md">How-To</a> and contact us to get deeper explanation of questions you have by raising an <a href="https://github.com/mobiroo/OpenIAB/issues?state=open">Issue</a></li>
 
 
 License
