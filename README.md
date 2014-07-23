@@ -315,11 +315,11 @@ General Steps:
      <uses-permission android:name="org.onepf.openiab.permission.BILLING" />
     ```
 
-2. If you're using the ```onepf``` version of OpenIAB, you need to disable the signature checking. If you use the ```Mobiroo``` version, VERIFY_SKIP is the default behaviour.
+2. If you're using the ```onepf``` version of OpenIAB, you need to disable the signature checking. If you use the ```Mobiroo``` version, VERIFY_ONLY_KNOWN is the default behaviour.
 
     ```java
     Options opts = new OpenIabHelper.Options();
-    opts.verifyMode = Options.VERIFY_SKIP;
+    opts.verifyMode = Options.VERIFY_ONLY_KNOWN;
     mHelper = new OpenIabHelper(context, opts);
     ```
 
