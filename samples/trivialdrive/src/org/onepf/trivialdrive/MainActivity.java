@@ -151,7 +151,7 @@ public class MainActivity extends Activity {
     OpenIabHelper mHelper;
 
     /** is bililng setup is completed */
-    private boolean setupDone = false;
+    private Boolean setupDone;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -212,6 +212,7 @@ public class MainActivity extends Activity {
 
                 if (!result.isSuccess()) {
                     // Oh noes, there was a problem.
+                    setupDone = false;
                     complain("Problem setting up in-app billing: " + result);
                     return;
                 }
@@ -282,10 +283,16 @@ public class MainActivity extends Activity {
             return;
         }
 
-        if (!setupDone) {
+        if (setupDone == null) {
             complain("Billing Setup is not completed yet");
             return;
         }
+
+        if (!setupDone) {
+            complain("Billing Setup failed");
+            return;
+        }
+
         // launch the gas purchase UI flow.
         // We will be notified of completion via mPurchaseFinishedListener
         setWaitScreen(true);
@@ -303,9 +310,14 @@ public class MainActivity extends Activity {
     // User clicked the "Upgrade to Premium" button.
     public void onUpgradeAppButtonClicked(View arg0) {
         Log.d(TAG, "Upgrade button clicked; launching purchase flow for upgrade.");
-        
-        if (!setupDone) {
+
+        if (setupDone == null) {
             complain("Billing Setup is not completed yet");
+            return;
+        }
+
+        if (!setupDone) {
+            complain("Billing Setup failed");
             return;
         }
 
@@ -323,8 +335,13 @@ public class MainActivity extends Activity {
     // "Subscribe to infinite gas" button clicked. Explain to user, then start purchase
     // flow for subscription.
     public void onInfiniteGasButtonClicked(View arg0) {
-        if (!setupDone) {
+        if (setupDone == null) {
             complain("Billing Setup is not completed yet");
+            return;
+        }
+
+        if (!setupDone) {
+            complain("Billing Setup failed");
             return;
         }
 
@@ -341,7 +358,7 @@ public class MainActivity extends Activity {
         setWaitScreen(true);
         Log.d(TAG, "Launching purchase flow for infinite gas subscription.");
         mHelper.launchPurchaseFlow(this,
-                SKU_INFINITE_GAS, IabHelper.ITEM_TYPE_SUBS, 
+                SKU_INFINITE_GAS, IabHelper.ITEM_TYPE_SUBS,
                 RC_REQUEST, mPurchaseFinishedListener, payload);        
     }
     

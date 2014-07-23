@@ -1,31 +1,26 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion project.compileSdkVersion
     buildToolsVersion project.buildToolsVersion
 
-    defaultPublishConfig 'completeRelease'
-    publishNonDefault true
-
     defaultConfig {
         minSdkVersion project.minSdkVersion
         targetSdkVersion project.targetSdkVersion
-        versionCode 9
-        versionName "2.7"
+        versionCode 11
+        versionName '0.9.4'
 
-        applicationId = 'org.onepf.oms'
+        applicationId = "org.onepf.life"
 
         sourceSets {
             main {
                 manifest.srcFile 'AndroidManifest.xml'
+                java.srcDirs = ['src']
                 resources.srcDirs = ['src']
                 aidl.srcDirs = ['src']
-                jni.srcDirs = ['jni']
-                jniLibs.srcDirs = ['libs']
                 renderscript.srcDirs = ['src']
                 res.srcDirs = ['res']
                 assets.srcDirs = ['assets']
-                java.srcDirs = ['src']
             }
 
             androidTest.setRoot('tests')
@@ -33,28 +28,21 @@ android {
     }
 
     buildTypes {
-        debug
-        release
-        unity {
-            runProguard true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt', 'proguard-unity.txt'
+        release {
+            runProguard false
+            proguardFiles 'proguard-project.txt'
         }
     }
-
     lintOptions {
         abortOnError false
     }
+}
 
-    productFlavors {
-        noFortumo {
-            buildConfigField "boolean", "FORTUMO_ENABLE", "false"
-        }
-        complete {
-            buildConfigField "boolean", "FORTUMO_ENABLE", "true"
-        }
-    }
+repositories {
+    jcenter()
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
+    compile project(':library')
 }
