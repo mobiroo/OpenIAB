@@ -1282,7 +1282,7 @@ public class OpenIabHelper {
          * Note: Mobiroo does not support signing of receipts at this time. Please ensure that
          * verifyMode is set to VERIFY_SKIP.
          */
-        public int verifyMode = VERIFY_SKIP; // VERIFY_EVERYTHING; /* <-- Original Setting. */
+        public int verifyMode = VERIFY_ONLY_KNOWN; // VERIFY_EVERYTHING; /* <-- Original Setting. */
         /**
          * Verify signatures in any store. 
          * <p>
