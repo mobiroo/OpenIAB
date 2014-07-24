@@ -1,6 +1,6 @@
 How To add OpenIAB into an app
 =====
-1. Download the latest version of OpenIAB.jar from http://www.onepf.org/openiab and attach it to the project.
+1. Download the latest version of OpenIAB.jar from the Mobiroo portal site and attach it to the project.
 Or clone the library `git clone https://github.com/mobiroo/OpenIAB.git` and add /library as a Library Project.
 
 2. Map Google Play SKUs to Yandex/Amazon/etc SKUs like this:
