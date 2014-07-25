@@ -85,6 +85,10 @@ s3eOpenIabStoreNames* s3eOpenIabGetStoreNames_platform()
 	g_storeNames->m_Samsung = GetStaticJavaString(env, cls, "NAME_SAMSUNG");
 	if (g_storeNames->m_Samsung == NULL)
 		goto fail;
+
+	g_storeNames->m_Mobiroo = GetStaticJavaString(env, cls, "NAME_MOBIROO");
+	if (g_storeNames->m_Mobiroo == NULL)
+		goto fail;
 	
 	return g_storeNames;
 	

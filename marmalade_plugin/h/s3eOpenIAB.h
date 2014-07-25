@@ -227,6 +227,7 @@ struct s3eOpenIabStoreNames
 	char* m_Tizen;
 	char* m_Samsung;
 	char* m_AppStore;
+    char* m_Mobiroo;
 };
 
 /** Structure detailing a purchase that has been made, used in both s3eOpenIabPurchase and s3eOpenIabRestoreResponse */
