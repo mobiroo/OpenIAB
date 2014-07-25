@@ -28,6 +28,7 @@ namespace OnePF
                 STORE_SAMSUNG = "STORE_SAMSUNG";
                 STORE_NOKIA = "STORE_NOKIA";
                 STORE_YANDEX = "STORE_YANDEX";
+                STORE_MOBIROO = "STORE_MOBIROO";
                 return;
             }
 
@@ -42,6 +43,7 @@ namespace OnePF
                 STORE_SAMSUNG = pluginClass.GetStatic<string>("STORE_SAMSUNG");
                 STORE_NOKIA = pluginClass.GetStatic<string>("STORE_NOKIA");
                 STORE_YANDEX = pluginClass.GetStatic<string>("STORE_YANDEX");
+                STORE_MOBIROO = pluginClass.GetStatic<string>("STORE_MOBIROO");
             }
         }
 
@@ -229,6 +231,7 @@ namespace OnePF
             STORE_SAMSUNG = "STORE_SAMSUNG";
             STORE_NOKIA = "STORE_NOKIA";
             STORE_YANDEX = "STORE_YANDEX";
+            STORE_MOBIROO = "STORE_MOBIROO";
 		}
 #endif
     }

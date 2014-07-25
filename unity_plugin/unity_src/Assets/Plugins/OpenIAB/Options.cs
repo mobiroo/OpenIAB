@@ -58,7 +58,7 @@ namespace OnePF {
          * Receipt could be verified in {@link OnIabPurchaseFinishedListener#onIabPurchaseFinished()}
          * using {@link Purchase#getOriginalJson()} and {@link Purchase#getSignature()}
          */
-        public OptionsVerifyMode verifyMode = OptionsVerifyMode.VERIFY_EVERYTHING;
+        public OptionsVerifyMode verifyMode = OptionsVerifyMode.VERIFY_ONLY_KNOWN; //Mobiroo: originally VERIFY_EVERYTHING;
         
         /** 
          * storeKeys is map of [ appstore name -> publicKeyBase64 ] 
