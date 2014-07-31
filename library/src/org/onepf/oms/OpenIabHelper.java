@@ -32,6 +32,7 @@ import org.onepf.oms.appstore.AmazonAppstore;
 import org.onepf.oms.appstore.AmazonAppstoreBillingService;
 import org.onepf.oms.appstore.FortumoStore;
 import org.onepf.oms.appstore.GooglePlay;
+import org.onepf.oms.appstore.MobirooAppstore;
 import org.onepf.oms.appstore.NokiaStore;
 import org.onepf.oms.appstore.OpenAppstore;
 import org.onepf.oms.appstore.SamsungApps;
@@ -708,8 +709,21 @@ public class OpenIabHelper {
                             } else {
                                 String publicKey = options.storeKeys.get(appstoreName);
                                 if (options.verifyMode == Options.VERIFY_SKIP) publicKey = null;
-                                final OpenAppstore openAppstore = new OpenAppstore(context, appstoreName, openAppstoreService, billingIntent, publicKey, this);
-                                openAppstore.componentName = name;
+                                
+                                //Create Mobiroo Open store when discoverd
+                                OpenAppstore openAppstore;
+                                if(appstoreName.equals(MobirooAppstore.MOBIROO_PACKAGE_NAME))
+                                {
+                                	 Log.d(TAG, "discoverOpenStores() add new OpenStore: " + MobirooAppstore.MOBIROO_PACKAGE_NAME);
+                                	openAppstore = new MobirooAppstore(context, appstoreName, openAppstoreService, billingIntent, publicKey, this);
+                                	openAppstore.componentName = name;
+                                }
+                                else
+                                {
+                                	openAppstore = new OpenAppstore(context, appstoreName, openAppstoreService, billingIntent, publicKey, this);
+                                    openAppstore.componentName = name;
+                                }
+                                
                                 Log.d(TAG, "discoverOpenStores() add new OpenStore: " + openAppstore);
                                 synchronized (result) {
                                     if (result.contains(openAppstore) == false) {
@@ -1138,7 +1152,7 @@ public class OpenIabHelper {
         mAsyncInProgress = false;
     }
 
-    void logDebug(String msg) {
+    static void logDebug(String msg) {
         if (isDebugLog()) Log.d(TAG, msg);
     }
 

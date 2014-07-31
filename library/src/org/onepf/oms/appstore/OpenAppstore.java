@@ -41,10 +41,10 @@ public class OpenAppstore extends DefaultAppstore {
         return OpenIabHelper.isDebugLog();
     }
     
-    private Context context;
-    private ServiceConnection serviceConn;
-    private IOpenAppstore openAppstoreService;
-    private AppstoreInAppBillingService mBillingService;
+    protected Context context;
+    protected ServiceConnection serviceConn;
+    protected IOpenAppstore openAppstoreService;
+    protected AppstoreInAppBillingService mBillingService;
     
     /** id of OpenStore */
     private final String appstoreName;
@@ -80,6 +80,11 @@ public class OpenAppstore extends DefaultAppstore {
         }
     }
 
+    protected void setBillingService(AppstoreInAppBillingService appstoreInAppBillingService)
+    {
+    	this.mBillingService = appstoreInAppBillingService;
+    }
+    
     @Override
     public boolean isPackageInstaller(String packageName) {
         try {
@@ -166,10 +171,10 @@ public class OpenAppstore extends DefaultAppstore {
     }
 
     /** Represent {@link IOpenInAppBillingService} as {@link IInAppBillingService} */
-    private static final class IOpenInAppBillingWrapper implements IInAppBillingService {
+    protected static final class IOpenInAppBillingWrapper implements IInAppBillingService {
         private final IOpenInAppBillingService openStoreBilling;
 
-        private IOpenInAppBillingWrapper(IOpenInAppBillingService openStoreBilling) {
+        IOpenInAppBillingWrapper(IOpenInAppBillingService openStoreBilling) {
             this.openStoreBilling = openStoreBilling;
         }
 
