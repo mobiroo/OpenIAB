@@ -1047,6 +1047,12 @@ public class OpenIabHelper {
 
     public void consume(Purchase itemInfo) throws IabException {
         checkSetupDone("consume");
+        // Begin Mobiroo: Notify of consume() issue
+        if (mAppstore.getAppstoreName().equals(NAME_MOBIROO)) {
+            logDebug("Mobiroo does not track consumptions at this time. Please be patient.");
+            return;
+        }
+        // End Mobiroo: Notify of consume() issue
         Purchase purchaseStoreSku = (Purchase) itemInfo.clone(); // TODO: use Purchase.getStoreSku()
         purchaseStoreSku.setSku(getStoreSku(mAppstore.getAppstoreName(), itemInfo.getSku()));
         mAppstoreBillingService.consume(purchaseStoreSku);
