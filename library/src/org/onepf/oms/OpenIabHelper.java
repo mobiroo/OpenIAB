@@ -474,6 +474,12 @@ public class OpenIabHelper {
         if (options.verifyMode != Options.VERIFY_SKIP && options.storeKeys != null) { // check publicKeys. Must be not null and valid
             for (Entry<String, String> entry : options.storeKeys.entrySet()) {
                 if (entry.getValue() == null) {
+                    // Begin Mobiroo: added VERIFY_ONLY_KNOWN condition
+                    if (options.verifyMode != Options.VERIFY_ONLY_KNOWN) {
+                        logDebug("Mobiroo transaction validation must happen with the backend receipt verification service.");
+                        return;
+                    }
+                    // End Mobiroo: added VERIFY_ONLY_KNOWN condition
                     throw new IllegalArgumentException("Null publicKey for store: " + entry.getKey() + ", key: " + entry.getValue());
                 }
                 try {
