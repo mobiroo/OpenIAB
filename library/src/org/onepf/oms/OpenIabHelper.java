@@ -880,6 +880,11 @@ public class OpenIabHelper {
 
     public boolean subscriptionsSupported() {
         checkSetupDone("subscriptionsSupported");
+        // Begin Mobiroo: IAP-Subs not supported
+        if (mAppstore.getAppstoreName().equals(NAME_MOBIROO)) {
+            return false;
+        }
+        // End Mobiroo: IAP-Subs not supported
         return mAppstoreBillingService.subscriptionsSupported();
     }
 
