@@ -72,7 +72,7 @@ public class OpenIabHelper {
     private static String TAG = OpenIabHelper.class.getSimpleName();
 
     //Is debug enabled?
-    private static boolean isDebugLog = true;
+    private static boolean isDebugLog = false;
     
     private static final String BIND_INTENT = "org.onepf.oms.openappstore.BIND";
     
