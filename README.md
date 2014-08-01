@@ -141,15 +141,29 @@ security agreements; all channel Appstores are segregated and independent of eac
 because there are multiple domains and each supports it's own Receipt Verification service. In order to determine the correct channel,
 Mobiroo uses the "developerPayload" field to include the channel name. The format is as follows:
 
-    ```channelname```
+    ```
+    {
+      ...
+      "developerPayload": "channelname"
+      ...
+    }
+    ```
 
-Using the Mobiroo retail channel and purchasing a consumable item as an example:
+ Using the Mobiroo retail channel and purchasing a consumable item as an example:
 
-    ```mobiroo```
+    ```
+    {
+      ...
+      "developerPayload": "mobiroo"
+      ...
+    }
+    ```
 
-The actual Receipt Verification service endpoint is constructed as follows:
+ The actual Receipt Verification service endpoint is constructed as follows:
 
-    ```https://{channelname}.mobileplatform.solutions/api/v1.0/openiab/verify/{packagename}/inapp/{sku}/purchases/{token}```
+    ```
+    https://{channelname}.mobileplatform.solutions/api/v1.0/openiab/verify/{packagename}/inapp/{sku}/purchases/{token}
+    ```
 
 Where:
 
