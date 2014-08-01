@@ -115,11 +115,11 @@ just the Mobiroo Appstore; edit your proguard config file as follows:
 11. To test .apk with Mobiroo OpenIAB Tester some steps are needed:
 
     - Download and install Mobiroo OpenIAB Tester from the Mobiroo portal site
-    - Download JSON with in-app products from Amazon Developer Console and put JSON with in-app products to /mnt/sdcard
+    - Download JSON with in-app products from the Mobiroo portal site and put JSON with in-app products to /mnt/sdcard
     - Install your .apk with special option to help OpenIAB choose Amazon protocol
     ```bash
-    # install for Amazon SDK Tester:
-    adb install -i com.amazon.venezia /path/to/YourApp.apk
+    # install for Mobiroo OpenIAB Tester:
+    adb install -i com.mobiroo.xgen /path/to/YourApp.apk
     ```
 
 Receipt Verification on Server
