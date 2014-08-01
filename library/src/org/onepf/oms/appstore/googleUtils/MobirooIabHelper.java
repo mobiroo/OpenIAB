@@ -1,13 +1,12 @@
 package org.onepf.oms.appstore.googleUtils;
 
 import java.util.List;
-
+import org.json.JSONObject;
 import org.onepf.oms.Appstore;
 import org.onepf.oms.OpenIabHelper;
 import org.onepf.oms.appstore.mobirooUtils.HttpResponseResult;
 import org.onepf.oms.appstore.mobirooUtils.InAppPurchaseConsumeRequest;
 import org.onepf.oms.appstore.mobirooUtils.MobirooHelper;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -62,6 +61,23 @@ public class MobirooIabHelper extends IabHelper {
         String purchaseData = data.getStringExtra(RESPONSE_INAPP_PURCHASE_DATA);
         String dataSignature = data.getStringExtra(RESPONSE_INAPP_SIGNATURE);
 
+		try {
+			JSONObject jsonObject = new JSONObject(purchaseData);
+			String baseUrl = MobirooHelper.getBaseUrl(mContext);
+
+			if (!jsonObject.has("developerPayload")
+					|| jsonObject.getString("developerPayload") == null
+					|| jsonObject.getString("developerPayload").trim().length() == 0) {
+				android.net.Uri uri = android.net.Uri.parse(baseUrl);
+				String host = uri.getHost();
+				String[] split = host.split("\\.");
+				jsonObject.put("developerPayload", split[0]);
+				purchaseData = jsonObject.toString();
+			}
+		} catch (Exception e) {
+			logError("handleActivityResult: " + e);
+		}
+        
         
         final int RESULT_USER_CANCELED = 1;
         // Begin Mobiroo: Handle return values correctly
