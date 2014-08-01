@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.onepf.oms.Appstore;
 import org.onepf.oms.OpenIabHelper;
+import org.onepf.oms.appstore.mobirooUtils.HttpResponseResult;
+import org.onepf.oms.appstore.mobirooUtils.InAppPurchaseConsumeRequest;
+import org.onepf.oms.appstore.mobirooUtils.MobirooHelper;
 
 import android.app.Activity;
 import android.content.Context;
@@ -88,8 +91,69 @@ public class MobirooIabHelper extends IabHelper {
 
 	@Override
 	public void consume(Purchase itemInfo) throws IabException {
-		logDebug("consume: ");
-		super.consume(itemInfo);
+		logDebug("consume: " + itemInfo);
+
+		boolean consumePurchaseEnabled = MobirooHelper
+				.isConsumePurchaseEnabled(mContext);
+		logDebug("consume: consumePurchaseEnabled: " + consumePurchaseEnabled);
+		if (consumePurchaseEnabled == true) {
+			super.consume(itemInfo);
+		} else {
+			if (!itemInfo.mItemType.equals(ITEM_TYPE_INAPP)) {
+				throw new IabException(IABHELPER_INVALID_CONSUMPTION,
+						"Items of type '" + itemInfo.mItemType
+								+ "' can't be consumed.");
+			}
+
+			final int RESULT_OK = 0;
+			final int RESULT_ERROR = 6;
+			final int RESULT_ITEM_NOT_OWNED = 8;
+			MobirooHelper.setStrictModePolicy();
+			String baseUrl = MobirooHelper.getBaseUrl(mContext);
+			String android_id = MobirooHelper.getAndroidId(mContext);
+			String package_name = itemInfo.getPackageName();
+			String order_uuid = itemInfo.getToken();
+
+			if (order_uuid == null || order_uuid.equals("")) {
+				logError("Can't consume " + itemInfo.getSku() + ". No token.");
+				throw new IabException(IABHELPER_MISSING_TOKEN,
+						"PurchaseInfo is missing token for sku: "
+								+ itemInfo.getSku() + " " + itemInfo);
+			}
+
+			logDebug("Consuming sku: " + itemInfo.getSku() + ", token: "
+					+ itemInfo.getToken());
+
+			InAppPurchaseConsumeRequest inAppPurchaseConsumeRequest = new InAppPurchaseConsumeRequest(
+					order_uuid, android_id, package_name);
+
+			try {
+				HttpResponseResult httpResponseResult = MobirooHelper
+						.consumePurchase(mContext, baseUrl,
+								inAppPurchaseConsumeRequest);
+				if (httpResponseResult.getResponseCode() == 200
+						|| httpResponseResult.getResponseCode() == 409) {
+					logDebug("Successfully consumed sku: " + itemInfo.getSku()
+							+ ", Billing Response: " + RESULT_OK);
+				} else if (httpResponseResult.getResponseCode() == 412) {
+					logDebug("Error consuming consuming sku "
+							+ itemInfo.getSku() + ". "
+							+ getResponseDesc(RESULT_ITEM_NOT_OWNED));
+					throw new IabException(RESULT_ITEM_NOT_OWNED,
+							"Error consuming sku " + itemInfo.getSku());
+				} else {
+					logDebug("Error consuming consuming sku "
+							+ itemInfo.getSku() + ". "
+							+ getResponseDesc(RESULT_ERROR));
+					throw new IabException(RESULT_ERROR, "Error consuming sku "
+							+ itemInfo.getSku());
+				}
+			} catch (Exception e) {
+				throw new IabException(IABHELPER_REMOTE_EXCEPTION,
+						"Remote exception while consuming. PurchaseInfo: "
+								+ itemInfo, e);
+			}
+		}
 	}
 
 	@Override
@@ -119,4 +183,12 @@ public class MobirooIabHelper extends IabHelper {
 	private static boolean isDebugLog() {
         return OpenIabHelper.isDebugLog();
     }
+
+	@Override
+	public boolean subscriptionsSupported() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	
 }

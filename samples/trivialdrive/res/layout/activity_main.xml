@@ -78,6 +78,20 @@
                android:layout_height="wrap_content" />
     	   	
     	</LinearLayout>
+    	
+    	<LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+            
+    	     <ImageView
+               android:id="@+id/infinite_consume_button"
+               android:src="@drawable/ic_launcher"
+               android:onClick="onConsumeClicked"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content" />
+            </LinearLayout>
     </LinearLayout>
     
 </FrameLayout>

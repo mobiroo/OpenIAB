@@ -18,6 +18,8 @@ package org.onepf.trivialdrive;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.onepf.oms.OpenIabHelper;
 import org.onepf.oms.appstore.AmazonAppstore;
 import org.onepf.oms.appstore.googleUtils.IabHelper;
@@ -114,6 +116,9 @@ public class MainActivity extends Activity {
         OpenIabHelper.mapSku(SKU_PREMIUM, "Appland", "org.onepf.trivialdrive.premium");
 		OpenIabHelper.mapSku(SKU_PREMIUM, OpenIabHelper.NAME_NOKIA, "1023608");
 		OpenIabHelper.mapSku(SKU_PREMIUM, "SlideME", "slideme_sku_premium");
+		
+		OpenIabHelper.mapSku(SKU_PREMIUM, OpenIabHelper.NAME_MOBIROO, "mobiroo_sku_premium");
+		OpenIabHelper.mapSku(SKU_GAS, OpenIabHelper.NAME_MOBIROO, "mobiroo_sku_gas");
 
         OpenIabHelper.mapSku(SKU_GAS, OpenIabHelper.NAME_AMAZON, "org.onepf.trivialdrive.amazon.gas");
         OpenIabHelper.mapSku(SKU_GAS, OpenIabHelper.NAME_TSTORE, "tstore_sku_gas");
@@ -548,4 +553,28 @@ public class MainActivity extends Activity {
         Log.d(TAG, "Loaded data: tank = " + String.valueOf(mTank));
     }
 
+    
+	public void onConsumeClicked(View view) {
+		try {
+
+			JSONObject jsonObject = new JSONObject();
+
+			jsonObject.put("orderId", "TEST1234");
+			jsonObject.put("packageName", getPackageName());
+			jsonObject.put("productId", "TEST1234");
+			jsonObject.put("purchaseTime", 123456);
+			jsonObject.put("purchaseState", 1);
+			jsonObject.put("developerPayload", "TEST1234");
+			jsonObject.put("purchaseToken", "TEST1234");
+			
+			Purchase purchase = new Purchase("inapp", jsonObject.toString(), "", "com.mobiroo.xgen");
+			
+			mHelper.consumeAsync(purchase, mConsumeFinishedListener);
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 }

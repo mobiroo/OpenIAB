@@ -72,7 +72,7 @@ public class OpenIabHelper {
     private static String TAG = OpenIabHelper.class.getSimpleName();
 
     //Is debug enabled?
-    private static boolean isDebugLog = false;
+    private static boolean isDebugLog = true;
     
     private static final String BIND_INTENT = "org.onepf.oms.openappstore.BIND";
     
@@ -894,11 +894,6 @@ public class OpenIabHelper {
 
     public boolean subscriptionsSupported() {
         checkSetupDone("subscriptionsSupported");
-        // Begin Mobiroo: IAP-Subs not supported
-        if (mAppstore.getAppstoreName().equals(NAME_MOBIROO)) {
-            return false;
-        }
-        // End Mobiroo: IAP-Subs not supported
         return mAppstoreBillingService.subscriptionsSupported();
     }
 
@@ -1061,12 +1056,6 @@ public class OpenIabHelper {
 
     public void consume(Purchase itemInfo) throws IabException {
         checkSetupDone("consume");
-        // Begin Mobiroo: Notify of consume() issue
-        if (mAppstore.getAppstoreName().equals(NAME_MOBIROO)) {
-            logDebug("Mobiroo does not track consumptions at this time. Please be patient.");
-            return;
-        }
-        // End Mobiroo: Notify of consume() issue
         Purchase purchaseStoreSku = (Purchase) itemInfo.clone(); // TODO: use Purchase.getStoreSku()
         purchaseStoreSku.setSku(getStoreSku(mAppstore.getAppstoreName(), itemInfo.getSku()));
         mAppstoreBillingService.consume(purchaseStoreSku);
