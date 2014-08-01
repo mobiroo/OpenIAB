@@ -50,6 +50,7 @@ https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onep
 8. Add the required permissions to the AndroidManifest.xml
 
 If you need only need to support Mobiroo's Appstore:
+
     ```xml
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="org.onepf.openiab.permission.BILLING" />
@@ -57,6 +58,7 @@ If you need only need to support Mobiroo's Appstore:
 
 If you need to support more than just Mobiroo's Appstore, add the required permissions as indicated by the XML
 comments depending on the OpenIAB Appstores you wish to support:
+
     ```xml
     <!--all-->
     <uses-permission android:name="android.permission.INTERNET"/>
