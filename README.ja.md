@@ -49,17 +49,15 @@ https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onep
 
 8. Add the required permissions to the AndroidManifest.xml
 
-If you need only need to support Mobiroo's Appstore:
-
     ```xml
+    <!-- If you are supporting just the Mobiroo Appstore... -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="org.onepf.openiab.permission.BILLING" />
-    ```
 
-If you need to support more than just Mobiroo's Appstore, add the required permissions as indicated by the XML
-comments depending on the OpenIAB Appstores you wish to support:
+    <!--
+    If you need to support more than just Mobiroo's Appstore, add the required permissions as indicated by the XML comments...
+    -->
 
-    ```xml
     <!--all-->
     <uses-permission android:name="android.permission.INTERNET"/>
     <!--Google Play-->
@@ -77,13 +75,13 @@ comments depending on the OpenIAB Appstores you wish to support:
     <uses-permission android:name="android.permission.SEND_SMS" />
     <!--SlideME-->
     <uses-permission android:name="com.slideme.sam.manager.inapp.permission.BILLING" />
-    ```
 
+    <!--
     Be careful using sms permissions. If you want to support devices without sms functionality, don't forget to add
+    -->
 
-      ```xml
       <uses-feature android:name="android.hardware.telephony" android:required="false"/>
-      ```
+    ```
 
 9. Mobiroo does not require any modifications to your proguard configuration, However if you need to support more than
 just the Mobiroo Appstore; edit your proguard config file as follows:
@@ -109,6 +107,7 @@ just the Mobiroo Appstore; edit your proguard config file as follows:
     ```
 
 10. Troubleshooting: additional logging is very helpful if you trying to understand what's wrong with configuration or raise issue:
+
     ```java
     helper.enableDebugLogging(true);
     ```
