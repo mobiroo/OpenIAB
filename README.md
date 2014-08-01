@@ -79,7 +79,7 @@ comments depending on the OpenIAB Appstores you wish to support:
     <uses-permission android:name="com.slideme.sam.manager.inapp.permission.BILLING" />
     ```
 
-    Be careful using sms permissions. If you want to support devices without sms functionality, don't forget to add
+Be careful using sms permissions. If you want to support devices without sms functionality, don't forget to add
 
       ```xml
       <uses-feature android:name="android.hardware.telephony" android:required="false"/>
