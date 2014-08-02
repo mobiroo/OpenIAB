@@ -116,9 +116,7 @@ public class MainActivity extends Activity {
         OpenIabHelper.mapSku(SKU_PREMIUM, "Appland", "org.onepf.trivialdrive.premium");
 		OpenIabHelper.mapSku(SKU_PREMIUM, OpenIabHelper.NAME_NOKIA, "1023608");
 		OpenIabHelper.mapSku(SKU_PREMIUM, "SlideME", "slideme_sku_premium");
-		
 		OpenIabHelper.mapSku(SKU_PREMIUM, OpenIabHelper.NAME_MOBIROO, "mobiroo_sku_premium");
-		OpenIabHelper.mapSku(SKU_GAS, OpenIabHelper.NAME_MOBIROO, "mobiroo_sku_gas");
 
         OpenIabHelper.mapSku(SKU_GAS, OpenIabHelper.NAME_AMAZON, "org.onepf.trivialdrive.amazon.gas");
         OpenIabHelper.mapSku(SKU_GAS, OpenIabHelper.NAME_TSTORE, "tstore_sku_gas");
@@ -127,6 +125,7 @@ public class MainActivity extends Activity {
         OpenIabHelper.mapSku(SKU_GAS, "Appland", "org.onepf.trivialdrive.gas");
 		OpenIabHelper.mapSku(SKU_GAS, OpenIabHelper.NAME_NOKIA, "1023609");
 		OpenIabHelper.mapSku(SKU_GAS, "SlideME", "slideme_sku_gas");
+        OpenIabHelper.mapSku(SKU_GAS, OpenIabHelper.NAME_MOBIROO, "mobiroo_sku_gas");
 
         OpenIabHelper.mapSku(SKU_INFINITE_GAS, OpenIabHelper.NAME_AMAZON, "org.onepf.trivialdrive.amazon.infinite_gas");
         OpenIabHelper.mapSku(SKU_INFINITE_GAS, OpenIabHelper.NAME_TSTORE, "tstore_sku_infinite_gas");
