@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">OnePF Store</string>
+    <string name="app_name">Mobiroo Test Store</string>
+    <string name="purchase_notice">To allow the In-App Purchase; tap "Approve Transaction", to deny; tap "Decline Transaction".</string>
+    <string name="purchase_accept">Approve Transaction</string>
+    <string name="purchase_reject">Decline Transaction</string>
+    <string name="general_information">In order to test OpenIAB transactions and 3rd party applications, you must create an XML file containing all of the IAP Product definitions, name it "mobiroo.xml" and place it on the device at the following location: "/sdcard/mobiroo-store/mobiroo.xml". Once that is complete, you can then begin testing your 3rd party integration of the Mobiroo OpenIAB Library. If you have any questions, comments or concerns; please do not hesitate to contact: devrelations@mobiroo.com</string>
+    <string name="cfg_read_fail">Could not read the IAP product configuration file.</string>
+    <string name="cfg_dir_fail">Unable to make the /sdcard/mobiroo-store directory.</string>
+    <string name="cfg_copy_fail">Failed to copy asset file: %1$s</string>
+    <string name="cfg_parse_fail">Could not parse the provided configuration file.</string>
+    <string name="cfg_read_close_fail">Could not close file stream while reading the configuration file.</string>
+    <string name="cfg_file_not_found">Configuration file not found.</string>
 </resources>

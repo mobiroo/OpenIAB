@@ -71,12 +71,7 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
      */
     @Override
     public int isBillingSupported(int apiVersion, String packageName, String type) throws RemoteException {
-        if (apiVersion >= 3 &&
-                (type.equals(BillingBinder.ITEM_TYPE_INAPP) || type.equals(BillingBinder.ITEM_TYPE_SUBS))) {
-            return RESULT_OK;
-        } else {
-            return RESULT_BILLING_UNAVAILABLE;
-        }
+        return BillingBinder.RESULT_OK; //< Mobiroo: replaced all with just this.
     }
 
     /**
@@ -121,9 +116,9 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
         }
 
         if (detailsList.size() <= 0) {
-            result.putInt(RESPONSE_CODE, RESULT_ITEM_UNAVAILABLE);
+            result.putInt(RESPONSE_CODE, BillingBinder.RESULT_ITEM_UNAVAILABLE);
         } else {
-            result.putInt(RESPONSE_CODE, RESULT_OK);
+            result.putInt(RESPONSE_CODE, BillingBinder.RESULT_OK);
             result.putStringArrayList(DETAILS_LIST, detailsList);
         }
 
@@ -172,14 +167,14 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
         } else {
             SkuDetails skuDetails = _db.getSkuDetails(sku);
             if (skuDetails == null) {
-                result.putInt(RESPONSE_CODE, RESULT_ITEM_UNAVAILABLE);
+                result.putInt(RESPONSE_CODE, BillingBinder.RESULT_ITEM_UNAVAILABLE);
             } else if (!skuDetails.getType().equals(type)) {
-                result.putInt(RESPONSE_CODE, RESULT_DEVELOPER_ERROR);
+                result.putInt(RESPONSE_CODE, BillingBinder.RESULT_DEVELOPER_ERROR);
             } else {
                 purchaseIntent.putExtra("packageName", packageName);
                 purchaseIntent.putExtra("sku", sku);
-                purchaseIntent.putExtra("developerPayload", developerPayload);
-                result.putInt(RESPONSE_CODE, RESULT_OK);
+                purchaseIntent.putExtra("developerPayload", "mobiroo");
+                result.putInt(RESPONSE_CODE, BillingBinder.RESULT_OK);
             }
         }
 
@@ -221,7 +216,7 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
             return result;
         }
 
-        result.putInt(RESPONSE_CODE, RESULT_OK);
+        result.putInt(RESPONSE_CODE, BillingBinder.RESULT_OK);
 
         ArrayList<Purchase> purchaseHistory = _db.getInventory(packageName, type);
         int size = purchaseHistory.size();
@@ -253,6 +248,6 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
      */
     @Override
     public int consumePurchase(int apiVersion, String packageName, String purchaseToken) throws RemoteException {
-        return apiVersion < 3 ? RESULT_DEVELOPER_ERROR : _db.consume(purchaseToken);
+        return /*apiVersion < 3 ? RESULT_DEVELOPER_ERROR :*/ _db.consume(purchaseToken);
     }
 }

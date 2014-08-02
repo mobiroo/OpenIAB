@@ -1,32 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-        >
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Do you really want to spend hard earned money on numbers and pixels?"
-            android:gravity="center"/>
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center">
-        <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="No way"
-                android:layout_marginLeft="10dp"
-                android:id="@+id/button" android:onClick="onCancelClick" android:layout_weight="1"/>
+              android:layout_height="fill_parent">
 
-        <Button android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:text="Absolutely" android:id="@+id/button1" android:layout_gravity="left|center_vertical"
-                android:onClick="onOkClick" android:layout_weight="1"/>
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/mobiroo_banner"
+        android:scaleType="fitXY"
+        android:layout_alignParentTop="true" />
+
+    <LinearLayout
+        android:id="@+id/buttonLayoutView"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/imageView2"
+        android:layout_gravity="center">
+            
+        <Button
+            android:id="@+id/button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:onClick="onCancelClick"
+            android:text="@string/purchase_reject" />
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:onClick="onOkClick"
+            android:text="@string/purchase_accept" />
+
     </LinearLayout>
-</LinearLayout>
+    
+    <TextView
+        android:id="@+id/textViewPurchaseNotice"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/buttonLayoutView"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/purchase_notice" />
+    
+</RelativeLayout>
 

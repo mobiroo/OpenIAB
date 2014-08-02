@@ -21,7 +21,7 @@ public class AppstoreBinder extends IOpenAppstore.Stub {
 
     @Override
     public String getAppstoreName() throws RemoteException {
-        return "org.onepf.store";
+        return "com.mobiroo.xgen"; //< Mobiroo: changed from "org.onepf.store"
     }
 
     @Override

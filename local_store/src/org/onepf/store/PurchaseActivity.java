@@ -1,6 +1,7 @@
 package org.onepf.store;
 
-import org.onepf.store.R;
+import com.mobiroo.xgen.R;
+
 import org.onepf.store.data.Database;
 import org.onepf.store.data.Purchase;
 
@@ -18,7 +19,7 @@ public class PurchaseActivity extends Activity {
     public void onCancelClick(View view) {
         Intent intent = getIntent();
         intent.putExtra(BillingBinder.RESPONSE_CODE, BillingBinder.RESULT_USER_CANCELED);
-        setResult(RESULT_OK, intent);
+        setResult(BillingBinder.RESULT_OK, intent);
         finish();
     }
 
@@ -41,7 +42,7 @@ public class PurchaseActivity extends Activity {
             intent.putExtra(BillingBinder.INAPP_DATA_SIGNATURE, "");
         }
 
-        setResult(RESULT_OK, intent);
+        setResult(BillingBinder.RESULT_OK, intent);
         finish();
     }
 }
