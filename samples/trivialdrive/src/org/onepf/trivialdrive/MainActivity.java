@@ -15,9 +15,10 @@
 
 package org.onepf.trivialdrive;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
+import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.onepf.oms.OpenIabHelper;
@@ -26,7 +27,8 @@ import org.onepf.oms.appstore.googleUtils.IabHelper;
 import org.onepf.oms.appstore.googleUtils.IabResult;
 import org.onepf.oms.appstore.googleUtils.Inventory;
 import org.onepf.oms.appstore.googleUtils.Purchase;
-
+import org.onepf.trivialdrive.PurchaseVerificationHelper.VerifyPurchaseListener;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -393,7 +395,8 @@ public class MainActivity extends Activity {
          * installations is recommended.
          */
         
-        return true;
+        return callVerifyPurchase(p);
+        
     }
 
     // Callback for when a purchase is finished
@@ -574,6 +577,68 @@ public class MainActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+	}
+	
+	@SuppressLint("NewApi")
+	public boolean callVerifyPurchase(Purchase purchase)
+	{
+		Log.w(TAG, " Verify Purchase warning network operation on UI Thread");
+		String channel = purchase.getDeveloperPayload();
+		String packagename = getPackageName();
+		String sku = purchase.getSku();
+		String token = purchase.getToken();
+		
+		Log.w(TAG, " Verify Purchase warning: Setting Thread Policy to permitAll");
+		android.os.StrictMode.ThreadPolicy policy = new android.os.StrictMode.ThreadPolicy.Builder().permitAll().build();
+		android.os.StrictMode.setThreadPolicy(policy);
+		
+		try
+		{
+			VerifyPurchaseResponse verifyPurchaseResponse = PurchaseVerificationHelper.verifyPurchase(channel, packagename, sku, token);
+			Log.d(TAG, "Verify Purchase success: verifyPurchaseResponse= " + verifyPurchaseResponse.toString());
+			return true;
+		}
+		catch (ClientProtocolException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (JSONException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	public void callAsyncVerifyPurchase(Purchase purchase)
+	{
+		Log.d(TAG, "Calling verify purchae on Async Task");
+		String channel = purchase.getDeveloperPayload();
+		String packagename = getPackageName();
+		String sku = purchase.getSku();
+		String token = purchase.getToken();
+		
+		PurchaseVerificationHelper.asyncVerifyPurchase(channel, packagename, sku, token, new VerifyPurchaseListener()
+		{
+			
+			@Override
+			public void onVerifySuccess(VerifyPurchaseResponse verifyPurchaseResponse)
+			{
+				Log.d(TAG, "Verify Purchase success: verifyPurchaseResponse= " + verifyPurchaseResponse.toString());
+			}
+			
+			@Override
+			public void onVerifyFailure()
+			{
+				Log.e(TAG, "Verify Purchase Failed: verifyPurchaseResponse= ");
+			}
+		});
 
 	}
 }
