@@ -421,7 +421,19 @@ public class MainActivity extends Activity {
          * installations is recommended.
          */
         
-        return DEVELOPER_PAYLOAD.equals(payload);
+        boolean result = DEVELOPER_PAYLOAD.equals(payload);
+        
+        Log.i(TAG, "verifyDeveloperPayload: Sent Payload: " + DEVELOPER_PAYLOAD   + ", Recieved Payload: " + payload);
+        if(result)
+        {
+        	Log.d(TAG, "verifyDeveloperPayload: for Purchase: SKU: " + p.getSku() + ", SUCCESS");
+        }
+        else
+        {
+        	Log.e(TAG, "verifyDeveloperPayload: for Purchase: SKU: " + p.getSku() + ", Failed");
+        }
+        
+        return result;
         
     }
 
@@ -623,7 +635,7 @@ public class MainActivity extends Activity {
 	@SuppressLint("NewApi")
 	public boolean callVerifyPurchase(Purchase purchase)
 	{
-		Log.w(TAG, " Verify Purchase warning network operation on UI Thread");
+		Log.w(TAG, " ========= Verify Purchase warning network operation on UI Thread =============");
 		String channel = purchase.getDeveloperPayload();
 		String packagename = getPackageName();
 		String sku = purchase.getSku();
@@ -658,7 +670,7 @@ public class MainActivity extends Activity {
 	}
 	public void callAsyncVerifyPurchase(Purchase purchase)
 	{
-		Log.d(TAG, "Calling verify purchae on Async Task");
+		Log.d(TAG, " ======= Calling verify purchase on Async Task =============");
 		String channel = purchase.getDeveloperPayload();
 		String packagename = getPackageName();
 		String sku = purchase.getSku();
