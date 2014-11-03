@@ -61,24 +61,26 @@ public class MobirooIabHelper extends IabHelper {
         String purchaseData = data.getStringExtra(RESPONSE_INAPP_PURCHASE_DATA);
         String dataSignature = data.getStringExtra(RESPONSE_INAPP_SIGNATURE);
 
-		try {
-			JSONObject jsonObject = new JSONObject(purchaseData);
-			String baseUrl = MobirooHelper.getBaseUrl(mContext);
-
-			if (!jsonObject.has("developerPayload")
-					|| jsonObject.getString("developerPayload") == null
-					|| jsonObject.getString("developerPayload").trim().length() == 0) {
-				android.net.Uri uri = android.net.Uri.parse(baseUrl);
-				String host = uri.getHost();
-				String[] split = host.split("\\.");
-				jsonObject.put("developerPayload", split[0]);
-				purchaseData = jsonObject.toString();
-			}
-		} catch (Exception e) {
-			logError("handleActivityResult: " + e);
-		}
+        /**
+         * Removed the developer payload injection in the purchase data sent by the API (3/11/2014)
+//		try {
+//			JSONObject jsonObject = new JSONObject(purchaseData);
+//			String baseUrl = MobirooHelper.getBaseUrl(mContext);
+//
+//			if (!jsonObject.has("developerPayload")
+//					|| jsonObject.getString("developerPayload") == null
+//					|| jsonObject.getString("developerPayload").trim().length() == 0) {
+//				android.net.Uri uri = android.net.Uri.parse(baseUrl);
+//				String host = uri.getHost();
+//				String[] split = host.split("\\.");
+//				jsonObject.put("developerPayload", split[0]);
+//				purchaseData = jsonObject.toString();
+//			}
+//		} catch (Exception e) {
+//			logError("handleActivityResult: " + e);
+//		}
         
-        
+        */
         final int RESULT_USER_CANCELED = 1;
         // Begin Mobiroo: Handle return values correctly
         String appstoreName = appstore.getAppstoreName();
