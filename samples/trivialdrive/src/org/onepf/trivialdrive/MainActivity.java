@@ -18,6 +18,7 @@ package org.onepf.trivialdrive;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +28,9 @@ import org.onepf.oms.appstore.googleUtils.IabHelper;
 import org.onepf.oms.appstore.googleUtils.IabResult;
 import org.onepf.oms.appstore.googleUtils.Inventory;
 import org.onepf.oms.appstore.googleUtils.Purchase;
+import org.onepf.oms.appstore.googleUtils.Security;
 import org.onepf.trivialdrive.PurchaseVerificationHelper.VerifyPurchaseListener;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -109,6 +112,14 @@ public class MainActivity extends Activity {
     
     // SKU for our subscription (infinite gas)
     static final String SKU_INFINITE_GAS = "sku_infinite_gas";
+    
+    static final String DEVELOPER_PAYLOAD = "Trivial_Drive_Payload_Random_123";
+    
+	final public String MOBIROO_PUB_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkd5P6tcVYNa4xFk"
+			+ "KHt592HlOYrFq9T1OlDvkFpkdN9o+0cvTF2iQ8fjPQJ7eG6cr7Hc7Ch0mRtr1g4LFLQI92OrLAGTCag5Uyk/z4u"
+			+ "KZUTtN/o54PSWMx16XiuzaK66MWmNfTnEVTb4uYXqnajZkNjfA6QdxT03c3zMLUwuf0kKwSaRjmWyY7Rb+mjRmx"
+			+ "f09FIktB9fZPg1LSXXISalW4SC5hH7CYPxca1NuJmLq1uN0ANRgchh6jVXOhb+IAp9BugjlJ0LAFzQU76mOHoon"
+			+ "yy/kD1abGo/WruKh8+LuCrjvV0p7EJxR0AZEFnGystjVLwLsMPhHs7q7Tp77NplhVwIDAQAB";
     
     static {
         OpenIabHelper.mapSku(SKU_PREMIUM, OpenIabHelper.NAME_AMAZON, "org.onepf.trivialdrive.amazon.premium");
@@ -198,7 +209,12 @@ public class MainActivity extends Activity {
         storeKeys.put("com.yandex.store", YANDEX_PUBLIC_KEY);
         storeKeys.put("Appland", APPLAND_PUBLIC_KEY);
         storeKeys.put("SlideME", SLIDEME_PUBLIC_KEY);
+        
+        
+        Log.d(TAG, "=============== Registering Mobiroo PUBLIC KEY =================");
+        storeKeys.put(OpenIabHelper.NAME_MOBIROO, MOBIROO_PUB_KEY);
 
+        
         mHelper = new OpenIabHelper(this, storeKeys);
         
         // enable debug logging (for a production application, you should set this to false).
@@ -337,7 +353,7 @@ public class MainActivity extends Activity {
         /* TODO: for security, generate your payload here for verification. See the comments on 
          *        verifyDeveloperPayload() for more info. Since this is a SAMPLE, we just use 
          *        an empty string, but on a production app you should carefully generate this. */
-        String payload = ""; 
+        String payload = DEVELOPER_PAYLOAD; 
         
         setWaitScreen(true);
         Log.d(TAG, "Launching purchase flow for infinite gas subscription.");
@@ -354,8 +370,18 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	
+    	Log.d(TAG, "============== Processing purchase on activity result =================");
         Log.d(TAG, "onActivityResult() requestCode: " + requestCode+ " resultCode: " + resultCode+ " data: " + data);
 
+        String purhcaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
+		String purchaseSignedData = data.getStringExtra("INAPP_DATA_SIGNATURE");
+		String channelId = data.getStringExtra("CHANNEL_ID");
+		
+		Log.d(TAG, ": onActivityResult: purhcaseData: " + purhcaseData);
+		Log.d(TAG, ": onActivityResult: purchaseSignedData: " + purchaseSignedData);
+		Log.d(TAG, ": onActivityResult: channelId: " + channelId);
+        
         // Pass on the activity result to the helper for handling
         if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
             // not handled, so handle it ourselves (here's where you'd
@@ -371,7 +397,7 @@ public class MainActivity extends Activity {
     /** Verifies the developer payload of a purchase. */
     boolean verifyDeveloperPayload(Purchase p) {
         String payload = p.getDeveloperPayload();
-        
+        Log.d(TAG, "================ Verifying the developer payload =======================");
         /*
          * TODO: verify that the developer payload of the purchase is correct. It will be
          * the same one that you sent when initiating the purchase.
@@ -395,7 +421,19 @@ public class MainActivity extends Activity {
          * installations is recommended.
          */
         
-        return callVerifyPurchase(p);
+        boolean result = DEVELOPER_PAYLOAD.equals(payload);
+        
+        Log.i(TAG, "verifyDeveloperPayload: Sent Payload: " + DEVELOPER_PAYLOAD   + ", Recieved Payload: " + payload);
+        if(result)
+        {
+        	Log.d(TAG, "verifyDeveloperPayload: for Purchase: SKU: " + p.getSku() + ", SUCCESS");
+        }
+        else
+        {
+        	Log.e(TAG, "verifyDeveloperPayload: for Purchase: SKU: " + p.getSku() + ", Failed");
+        }
+        
+        return result;
         
     }
 
@@ -403,25 +441,38 @@ public class MainActivity extends Activity {
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
         public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
             Log.d(TAG, "Purchase finished: " + result + ", purchase: " + purchase);
-            if (result.isFailure()) {
+            if (result.isFailure()) 
+            {
                 complain("Error purchasing: " + result);
                 setWaitScreen(false);
                 return;
             }
-            if (!verifyDeveloperPayload(purchase)) {
+            if (!verifyDeveloperPayload(purchase)) 
+            {
                 complain("Error purchasing. Authenticity verification failed.");
                 setWaitScreen(false);
                 return;
             }
 
+            if(manualPurchaseSignatureVerify(purchase.getOriginalJson(), purchase.getSignature()))
+            {
+            	Log.i(TAG, "Purchase signature verification SUCCESS.");
+            }
+            else
+            {
+            	Log.e(TAG, "Purchase signature verification FAILD.");
+            }
+            
             Log.d(TAG, "Purchase successful.");
 
-            if (purchase.getSku().equals(SKU_GAS)) {
+            if (purchase.getSku().equals(SKU_GAS)) 
+            {
                 // bought 1/4 tank of gas. So consume it.
                 Log.d(TAG, "Purchase is gas. Starting gas consumption.");
                 mHelper.consumeAsync(purchase, mConsumeFinishedListener);
             }
-            else if (purchase.getSku().equals(SKU_PREMIUM)) {
+            else if (purchase.getSku().equals(SKU_PREMIUM)) 
+            {
                 // bought the premium upgrade!
                 Log.d(TAG, "Purchase is premium upgrade. Congratulating user.");
                 alert("Thank you for upgrading to premium!");
@@ -429,7 +480,8 @@ public class MainActivity extends Activity {
                 updateUi();
                 setWaitScreen(false);
             }
-            else if (purchase.getSku().equals(SKU_INFINITE_GAS)) {
+            else if (purchase.getSku().equals(SKU_INFINITE_GAS)) 
+            {
                 // bought the infinite gas subscription
                 Log.d(TAG, "Infinite gas subscription purchased.");
                 alert("Thank you for subscribing to infinite gas!");
@@ -583,7 +635,7 @@ public class MainActivity extends Activity {
 	@SuppressLint("NewApi")
 	public boolean callVerifyPurchase(Purchase purchase)
 	{
-		Log.w(TAG, " Verify Purchase warning network operation on UI Thread");
+		Log.w(TAG, " ========= Verify Purchase warning network operation on UI Thread =============");
 		String channel = purchase.getDeveloperPayload();
 		String packagename = getPackageName();
 		String sku = purchase.getSku();
@@ -618,7 +670,7 @@ public class MainActivity extends Activity {
 	}
 	public void callAsyncVerifyPurchase(Purchase purchase)
 	{
-		Log.d(TAG, "Calling verify purchae on Async Task");
+		Log.d(TAG, " ======= Calling verify purchase on Async Task =============");
 		String channel = purchase.getDeveloperPayload();
 		String packagename = getPackageName();
 		String sku = purchase.getSku();
@@ -639,6 +691,14 @@ public class MainActivity extends Activity {
 				Log.e(TAG, "Verify Purchase Failed: verifyPurchaseResponse= ");
 			}
 		});
-
+	}
+	
+	
+	public boolean manualPurchaseSignatureVerify(String origJson, String signature)
+	{
+		Log.d(TAG, "================== Starting Manual Purchase Signature Verify =========================");
+		boolean result = Security.verifyPurchase(MOBIROO_PUB_KEY, origJson, signature);
+		Log.d(TAG, "manualPurchaseSignatureVerify: Result= " + ((result)?"Purchase signed data is VALID":"Purchase signed data is NOT VALID"));
+		return result;
 	}
 }
