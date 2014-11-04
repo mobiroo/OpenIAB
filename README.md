@@ -8,6 +8,7 @@ https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onep
 
 3. Instantiate `new OpenIabHelper`  and call `helper.startSetup()`.
 When setup is done call  `helper.queryInventory()`
+
     ```java
        helper = new OpenIabHelper(this, storeKeys);
        helper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
@@ -21,12 +22,14 @@ When setup is done call  `helper.queryInventory()`
            }
        });
     ```
+
 https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L196
 
 4. Handle the results of `helper.queryInventory()` in an inventory listener and update UI to show what was purchased
 https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L223
 
 5. To process purchases you need to override `onActivityResult()` of your Activity
+
     ```java
        @Override
        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -49,6 +52,7 @@ signs the JSON string that contains the response data for a purchase order. Mobi
 create this signature. 
 
 Add the following key to your application:
+
     ```java
     final public String MOBIROO_PUB_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkd5P6tcVYNa4xFk"
             + "KHt592HlOYrFq9T1OlDvkFpkdN9o+0cvTF2iQ8fjPQJ7eG6cr7Hc7Ch0mRtr1g4LFLQI92OrLAGTCag5Uyk/z4u"
@@ -58,6 +62,7 @@ Add the following key to your application:
     ```
 
 Register the public key with the OpenIabHelper:
+
     ```java
     Map<String, String> storeKeys = new HashMap<String, String>();
     storeKeys.put(OpenIabHelper.NAME_MOBIROO, MOBIROO_PUB_KEY);
@@ -74,6 +79,7 @@ When your application receives this signed response you can use mobiroo public k
 performing signature verification you can detect responses that have been tampered with or that have been spoofed.
 You can perform this signature verification step in your application; however, if your application connects to a
 secure remote server then we recommend that you perform the signature verification on that server.
+
     ```java
     // on your purchase finished listener:
     public void onIabPurchaseFinished(IabResult result, Purchase purchase)
@@ -167,6 +173,7 @@ Receipt Verification on Server
 1. The Mobiroo OpenIAB project defaults to having the verifyMode option set to VERIFY_ONLY_KNOWN. If you are using the OnePF version
 stop now and switch to using the Mobiroo version of the OpenIAB library instead. Do not use the OnePF version of the OpenIAB library
 when connecting to the Mobiroo storefronts. At this point you need to specify
+
     ```java
     Options opts = new OpenIabHelper.Options();
     opts.verifyMode = Options.VERIFY_ONLY_KNOWN;
@@ -179,6 +186,7 @@ security agreements; all channel Appstores are segregated and independent of eac
 because there are multiple domains and each supports it's own Receipt Verification service. In order to determine the correct channel,
 Mobiroo storefront will add the channel ID as as an extra String data to the result intent of the purchase activity under the "CHANNEL_ID"
 key. Developers are advised to override the onActivityResult method and extract the channel ID from the result intent.
+
     ```java
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -190,6 +198,7 @@ key. Developers are advised to override the onActivityResult method and extract 
     ```
 
  The actual Receipt Verification service endpoint is constructed as follows:
+
     ```
     https://{channelname}.mobileplatform.solutions/api/v1.0/openiab/verify/{packagename}/inapp/{sku}/purchases/{token}
     ```
@@ -202,6 +211,7 @@ Where:
 * **{token}** is replaced with the transaction token received with the Purchase record.
 
 3. Get receipt's data and signature from Purchase object and send it to your server
+
     ```java
     new IabHelper.OnIabPurchaseFinishedListener() {
         public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
