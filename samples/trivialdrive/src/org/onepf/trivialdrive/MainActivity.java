@@ -17,12 +17,14 @@ package org.onepf.trivialdrive;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.onepf.oms.OpenIabHelper;
+import org.onepf.oms.OpenIabHelper.Options;
 import org.onepf.oms.appstore.AmazonAppstore;
 import org.onepf.oms.appstore.googleUtils.IabHelper;
 import org.onepf.oms.appstore.googleUtils.IabResult;
@@ -214,8 +216,11 @@ public class MainActivity extends Activity {
         Log.d(TAG, "=============== Registering Mobiroo PUBLIC KEY =================");
         storeKeys.put(OpenIabHelper.NAME_MOBIROO, MOBIROO_PUB_KEY);
 
-        
-        mHelper = new OpenIabHelper(this, storeKeys);
+        Options options = new Options();
+		options.storeKeys = storeKeys;
+		options.verifyMode = Options.VERIFY_ONLY_KNOWN;
+		
+        mHelper = new OpenIabHelper(this, options);
         
         // enable debug logging (for a production application, you should set this to false).
         //mHelper.enableDebugLogging(true);
@@ -245,6 +250,9 @@ public class MainActivity extends Activity {
     IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
         public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
             Log.d(TAG, "Query inventory finished.");
+            
+            verifyInventoryPurchases(inventory);
+            
             if (result.isFailure()) {
                 complain("Failed to query inventory: " + result);
                 return;
@@ -285,6 +293,32 @@ public class MainActivity extends Activity {
         }
     };
 
+    private void verifyInventoryPurchases(Inventory inventory)
+    {
+    	Log.d(TAG, "verifyInventoryPurchases");
+    	if(inventory!=null)
+    	{
+	    	List<Purchase> purchases = inventory.getAllPurchases();
+	        if(purchases!=null)
+	        {
+	        	Log.d(TAG, "================== START validating purchase history =======================");
+	        	for(Purchase purchase:purchases)
+	        	{
+	        		Log.d(TAG, "-----------------------------------------------------------");
+	        		String origJson = purchase.getOriginalJson();
+	        		String signature = purchase.getSignature();
+	        		Log.d(TAG, "Validating purchase ===> "  + origJson);
+	        		Log.d(TAG, "Signature ===> " + signature);
+	        		boolean valid = manualPurchaseSignatureVerify(origJson, signature);
+	        		String str = (valid)?"VALID":"NOT VALID";
+	        		Log.d(TAG, "RESULT: The signature is==> " + str);
+	        		Log.d(TAG, "-----------------------------------------------------------");
+	        	}
+	        	Log.d(TAG, "================== END validating purchase history =======================");
+	        }
+    	}
+    }
+    
     // User clicked the "Buy Gas" button
     public void onBuyGasButtonClicked(View arg0) {
         Log.d(TAG, "Buy gas button clicked.");
@@ -311,7 +345,7 @@ public class MainActivity extends Activity {
         /* TODO: for security, generate your payload here for verification. See the comments on 
          *        verifyDeveloperPayload() for more info. Since this is a SAMPLE, we just use 
          *        an empty string, but on a production app you should carefully generate this. */
-        String payload = ""; 
+        String payload = DEVELOPER_PAYLOAD; 
         
         mHelper.launchPurchaseFlow(this, SKU_GAS, RC_REQUEST, 
                 mPurchaseFinishedListener, payload);
@@ -331,7 +365,7 @@ public class MainActivity extends Activity {
         /* TODO: for security, generate your payload here for verification. See the comments on 
          *        verifyDeveloperPayload() for more info. Since this is a SAMPLE, we just use 
          *        an empty string, but on a production app you should carefully generate this. */
-        String payload = ""; 
+        String payload = DEVELOPER_PAYLOAD; 
 
         mHelper.launchPurchaseFlow(this, SKU_PREMIUM, RC_REQUEST, 
                 mPurchaseFinishedListener, payload);
@@ -382,6 +416,10 @@ public class MainActivity extends Activity {
 		Log.d(TAG, ": onActivityResult: purchaseSignedData: " + purchaseSignedData);
 		Log.d(TAG, ": onActivityResult: channelId: " + channelId);
         
+		Log.d(TAG, "===== DO Manual sign verification on onActivityResult ============");
+		boolean valid = Security.verifyPurchase(MOBIROO_PUB_KEY, purhcaseData, purchaseSignedData);
+		Log.d(TAG, "manualPurchaseSignatureVerify: Result= " + ((valid)?"Purchase signed data is VALID":"Purchase signed data is NOT VALID"));
+		
         // Pass on the activity result to the helper for handling
         if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
             // not handled, so handle it ourselves (here's where you'd
@@ -389,7 +427,8 @@ public class MainActivity extends Activity {
             // billing...
             super.onActivityResult(requestCode, resultCode, data);
         }
-        else {
+        else 
+        {
             Log.d(TAG, "onActivityResult handled by IABUtil.");
         }
     }
