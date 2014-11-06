@@ -19,7 +19,7 @@ import android.util.Log;
 
 public class PurchaseVerificationHelper
 {
-	public final static String TAG = PurchaseVerificationHelper.class.getSimpleName();
+	public final static String TAG = "TrivialDrive";
 	
 	// https://{channelname}.mobileplatform.solutions/api/v1.0/openiab/verify/{packagename}/inapp/{sku}/purchases/{token}
 	public static VerifyPurchaseResponse verifyPurchase(String channel, String packagename, String sku, String token) throws ClientProtocolException, IOException, JSONException
