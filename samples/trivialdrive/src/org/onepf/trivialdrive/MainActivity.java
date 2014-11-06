@@ -684,8 +684,10 @@ public class MainActivity extends Activity {
 	public boolean callVerifyPurchase(Purchase purchase)
 	{
 		Log.w(TAG, " ========= Verify Purchase warning network operation on UI Thread =============");
+		Log.d(TAG, "callVerifyPurchase: purchase: " + purchase.getOriginalJson());
+		
 		String packagename = getPackageName();
-		String sku = purchase.getSku();
+		String sku = getOriginalSkuFromPurchase(purchase);
 		String token = purchase.getToken();
 		
 		Log.w(TAG, " Verify Purchase warning: Setting Thread Policy to permitAll");
@@ -728,7 +730,7 @@ public class MainActivity extends Activity {
 	{
 		Log.d(TAG, " ======= Calling verify purchase on Async Task =============");
 		String packagename = getPackageName();
-		String sku = purchase.getSku();
+		String sku = getOriginalSkuFromPurchase(purchase);
 		String token = purchase.getToken();
 		
 		PurchaseVerificationHelper.asyncVerifyPurchase(mChannelId, packagename, sku, token, new VerifyPurchaseListener()
@@ -763,5 +765,24 @@ public class MainActivity extends Activity {
 		boolean result = Security.verifyPurchase(MOBIROO_PUB_KEY, origJson, signature);
 		Log.d(TAG, "manualPurchaseSignatureVerify: Result= " + ((result)?"Purchase signed data is VALID":"Purchase signed data is NOT VALID"));
 		return result;
+	}
+	
+	private String getOriginalSkuFromPurchase(Purchase purchase)
+	{
+		Log.d(TAG, "getOriginalSkuFromPurchase: purchase: " + purchase.getOriginalJson());
+		try
+		{
+			String origJSON = purchase.getOriginalJson();
+			JSONObject o = new JSONObject(origJSON);
+	        String mSku = o.optString("productId");
+	        Log.d(TAG, "getOriginalSkuFromPurchase: Original SKU: " + mSku);
+	        return mSku;
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+			Log.e(TAG, "getOriginalSkuFromPurchase: Failed to get original sku", ex);
+			return new String();
+		}
 	}
 }
