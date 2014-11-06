@@ -6,8 +6,7 @@ Or clone the library `git clone https://github.com/mobiroo/OpenIAB.git` and add 
 2. Map Google Play SKUs to Yandex/Amazon/etc SKUs like this:
 https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L109
 
-3. Instantiate `new OpenIabHelper`  and call `helper.startSetup()`.
-When setup is done call  `helper.queryInventory()`
+3. Instantiate `new OpenIabHelper` and call `helper.startSetup()`. When setup is done call `helper.queryInventory()`
     ```java
        helper = new OpenIabHelper(this, storeKeys);
        helper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
@@ -40,12 +39,48 @@ and handle the results with the listener
 https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L396
 
 6. If the user has purchased a consumable item, call  ``` helper.consume() ```
-to exclude it from the inventory. If the item is not consumed, a store supposes it as non-consumable item and doesn't allow to purchase it one more time. Also it will be returned by ``` helper.queryInventory() ``` next time
+to exclude it from the inventory. If the item is not consumed, a store supposes it as non-consumable item and doesn't
+allow to purchase it one more time. Also it will be returned by ``` helper.queryInventory() ``` next time
 https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L415
 
-7. Mobiroo *does not support* the digital signing of receipts at this time, so no storeKeys are required for Mobiroo.
-However, if you do support more than just Mobiroo's Appstore, you can specify keys for different stores like this:
-https://github.com/mobiroo/OpenIAB/blob/master/samples/trivialdrive/src/org/onepf/trivialdrive/MainActivity.java#L188
+7. To help ensure the integrity of the transaction information that is sent to your application, Mobiroo Storefront
+signs the JSON string that contains the response data for a purchase order. Mobiroo Storefront uses a private key to
+create this signature. 
+Add the following key to your application:
+    ```java
+       final public String MOBIROO_PUB_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkd5P6tcVYNa4xFk"
+               + "KHt592HlOYrFq9T1OlDvkFpkdN9o+0cvTF2iQ8fjPQJ7eG6cr7Hc7Ch0mRtr1g4LFLQI92OrLAGTCag5Uyk/z4u"
+               + "KZUTtN/o54PSWMx16XiuzaK66MWmNfTnEVTb4uYXqnajZkNjfA6QdxT03c3zMLUwuf0kKwSaRjmWyY7Rb+mjRmx"
+               + "f09FIktB9fZPg1LSXXISalW4SC5hH7CYPxca1NuJmLq1uN0ANRgchh6jVXOhb+IAp9BugjlJ0LAFzQU76mOHoon"
+               + "yy/kD1abGo/WruKh8+LuCrjvV0p7EJxR0AZEFnGystjVLwLsMPhHs7q7Tp77NplhVwIDAQAB";
+    ```
+Register the public key with the OpenIabHelper:
+    ```java
+       Map<String, String> storeKeys = new HashMap<String, String>();
+       storeKeys.put(OpenIabHelper.NAME_MOBIROO, MOBIROO_PUB_KEY);
+   
+       Options options = new Options();
+       options.storeKeys = storeKeys;
+       options.verifyMode = Options.VERIFY_ONLY_KNOWN; //by setting this option the OpenIAB library will verify the
+       // signatures only if publicKey is available. Otherwise it will skip the verification process.
+   
+       OpenIabHelper mHelper = new OpenIabHelper(this, options);
+    ```
+When your application receives this signed response you can use mobiroo public key to verify the signature. By
+performing signature verification you can detect responses that have been tampered with or that have been spoofed.
+You can perform this signature verification step in your application; however, if your application connects to a
+secure remote server then we recommend that you perform the signature verification on that server.
+    ```java
+       // on your purchase finished listener:
+       public void onIabPurchaseFinished(IabResult result, Purchase purchase)
+       {
+           String origJson = purchase.getOriginalJson();//original purhcase JSON data as received from the server.
+           String signature = purchase.getSignature();//the signed json data, data will be signed by the server using mobiroo private key.
+           boolean valid = org.onepf.oms.appstore.googleUtils.Security.verifyPurchase(MOBIROO_PUB_KEY, origJson, signature);
+           if(valid) Log.d("Signature is valid");
+           else Log.w("Purchase/Signature is NOT valid");
+       }
+    ```
 
 8. Add the required permissions to the AndroidManifest.xml
 
@@ -109,7 +144,7 @@ just the Mobiroo Appstore; edit your proguard config file as follows:
 10. Troubleshooting: additional logging is very helpful if you trying to understand what's wrong with configuration or raise issue:
 
     ```java
-    helper.enableDebugLogging(true);
+       helper.enableDebugLogging(true);
     ```
 
 11. To test .apk with Mobiroo OpenIAB Tester some steps are needed:
@@ -118,75 +153,63 @@ just the Mobiroo Appstore; edit your proguard config file as follows:
     - Download JSON with in-app products from the Mobiroo portal site and put JSON with in-app products to /mnt/sdcard
     - Install your .apk with special option to help OpenIAB choose Amazon protocol
     ```bash
-    # install for Mobiroo OpenIAB Tester:
-    adb install -i com.mobiroo.xgen /path/to/YourApp.apk
+       # install for Mobiroo OpenIAB Tester:
+       adb install -i com.mobiroo.xgen /path/to/YourApp.apk
     ```
 
 Receipt Verification on Server
 ---------------------
 
-1. Create OpenIabHelper with "Skip signature verification" option and no publicKeys. The Mobiroo OpenIAB project defaults to having the
-verifyMode option set to VERIFY_ONLY_KNOWN. If you are using the OnePF version of the OpenIAB project; please specify the verifyMode
-option in the OpenIAB constructor as follows:
-
+1. The Mobiroo OpenIAB project defaults to having the verifyMode option set to VERIFY_ONLY_KNOWN. If you are using the OnePF version
+stop now and switch to using the Mobiroo version of the OpenIAB library instead. Do not use the OnePF version of the OpenIAB library
+when connecting to the Mobiroo storefronts. At this point you need to specify
     ```java
-    Options opts = new OpenIabHelper.Options();
-    opts.verifyMode = Options.VERIFY_ONLY_KNOWN;
-    mHelper = new OpenIabHelper(context, opts);
+       Options opts = new OpenIabHelper.Options();
+       opts.verifyMode = Options.VERIFY_ONLY_KNOWN;
+       mHelper = new OpenIabHelper(context, opts);
     ```
 
 2. The Mobiroo Appstore has multiple implementations, one for each channel partner that Mobiroo deals with. Due to this situation, for
 all intensive purposes; Mobiroo actually is a combination of many "island" Appstores under one umbrella. However, due to contractual and
 security agreements; all channel Appstores are segregated and independent of eachother. This complicates the Receipt Verification process
 because there are multiple domains and each supports it's own Receipt Verification service. In order to determine the correct channel,
-Mobiroo uses the "developerPayload" field to include the channel name. The format is as follows:
-
+Mobiroo storefront will add the channel ID as as an extra String data to the result intent of the purchase activity under the "CHANNEL_ID"
+key. Developers are advised to override the onActivityResult method and extract the channel ID from the result intent.
+    ```java
+       @Override
+       protected void onActivityResult(int requestCode, int resultCode, Intent data)
+       {
+           //please check your request code first
+           String channelId = data.getStringExtra("CHANNEL_ID");
+           Log.d("Channel ID = " + channelId);
+       }
     ```
-    {
-      ...
-      "developerPayload": "channelname"
-      ...
-    }
+The actual Receipt Verification service endpoint is constructed as follows:
     ```
-
- Using the Mobiroo retail channel and purchasing a consumable item as an example:
-
-    ```
-    {
-      ...
-      "developerPayload": "mobiroo"
-      ...
-    }
-    ```
-
- The actual Receipt Verification service endpoint is constructed as follows:
-
-    ```
-    https://{channelname}.mobileplatform.solutions/api/v1.0/openiab/verify/{packagename}/inapp/{sku}/purchases/{token}
+       https://{channelname}.mobileplatform.solutions/api/v1.0/openiab/verify/{packagename}/inapp/{sku}/purchases/{token}
     ```
 
 Where:
 
-* **{channelname}** is replaced with the string received in the developer payload field.
+* **{channelname}** is replaced with the string received in onActivityResult().
 * **{packagename}** is replaced with the package name of your application.
 * **{sku}** is replaced with the Mobiroo Appstore SKU as entered into the Mobiroo portal site.
 * **{token}** is replaced with the transaction token received with the Purchase record.
 
-2. Get receipt's data and signature from Purchase object and send it to your server
+3. Get receipt's data and signature from Purchase object and send it to your server
 
     ```java
-    new IabHelper.OnIabPurchaseFinishedListener() {
-        public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
-            // ... different result checks ...
-            String receiptData = purchase.getOriginalJson();
-            String receiptSignature = purchase.getSignature();
-            String storeName = purchase.getAppstoreName();
-            String urlToContent  = yourRequestReceiptVerificationOnServer(receiptData, receiptSignature, storeName);
-            // ... further code ...
-        }
-    }
+       new IabHelper.OnIabPurchaseFinishedListener() {
+           public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
+               // ... different result checks ...
+               String receiptData = purchase.getOriginalJson();
+               String receiptSignature = purchase.getSignature();
+               String storeName = purchase.getAppstoreName();
+               String urlToContent  = yourRequestReceiptVerificationOnServer(receiptData, receiptSignature, storeName);
+               // ... further code ...
+           }
+       }
     ```
-
 
 Unity Plugin
 =====
@@ -256,18 +279,11 @@ Why did Mobiroo completely fork the OpenIAB project?
 There are changes that needed to be made to the OpenIAB project in order to fully support Mobiroo's IAB services. In addition to
 these changes (which will be submitted to the upstream OpenIAB project in due time), Mobiroo found that the 3rd party app developers
 wishing to support Mobiroo's IAB implementation were getting rather confused with the documentation being generic in order to
-support all known Appstores. In that light, Mobiroo has opted to completely fork the OpenIAB library (at tagged version 0.9.6.1) and
+support all known Appstores. In that light, Mobiroo has opted to completely fork the OpenIAB library (at tagged version 0.9.6.2) and
 is in the process of re-writing all documentation, sample apps and the local testing store for specific use by Mobiroo 3rd party
 developers.
 
 Mobiroo pledges to maintain this repository in perpetuity and to push all useful changes back to the main OnePF OpenIAB project in due time.
-
-Documentation Translations
-=====
-
-Mobiroo provides this document in additional languages. The following languages are available:
-
-* [Japanese](README.ja.md)
 
 License
 =====
