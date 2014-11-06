@@ -1,7 +1,6 @@
 package org.onepf.oms.appstore.googleUtils;
 
 import java.util.List;
-import org.json.JSONObject;
 import org.onepf.oms.Appstore;
 import org.onepf.oms.OpenIabHelper;
 import org.onepf.oms.appstore.mobirooUtils.HttpResponseResult;
