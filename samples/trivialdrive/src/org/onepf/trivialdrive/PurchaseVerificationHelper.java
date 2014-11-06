@@ -100,19 +100,19 @@ public class PurchaseVerificationHelper
 			}
 			catch (ClientProtocolException e)
 			{
-				// TODO Auto-generated catch block
+				Log.e(TAG, "callVerifyPurchase: ClientProtocolException: Error:" + e);
 				e.printStackTrace();
 				exception = e;
 			}
 			catch (IOException e)
 			{
-				// TODO Auto-generated catch block
+				Log.e(TAG, "callVerifyPurchase: IOException: Error:" + e);
 				e.printStackTrace();
 				exception = e;
 			}
 			catch (JSONException e)
 			{
-				// TODO Auto-generated catch block
+				Log.e(TAG, "callVerifyPurchase: JSONException: Error:" + e);
 				e.printStackTrace();
 				exception = e;
 			}
