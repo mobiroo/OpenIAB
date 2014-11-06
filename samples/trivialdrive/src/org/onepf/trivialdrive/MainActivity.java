@@ -32,7 +32,6 @@ import org.onepf.oms.appstore.googleUtils.Inventory;
 import org.onepf.oms.appstore.googleUtils.Purchase;
 import org.onepf.oms.appstore.googleUtils.Security;
 import org.onepf.trivialdrive.PurchaseVerificationHelper.VerifyPurchaseListener;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -402,6 +401,7 @@ public class MainActivity extends Activity {
         super.startActivityForResult(intent, requestCode);
     }
 
+    private String mChannelId = "";
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	
@@ -411,6 +411,8 @@ public class MainActivity extends Activity {
         String purhcaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
 		String purchaseSignedData = data.getStringExtra("INAPP_DATA_SIGNATURE");
 		String channelId = data.getStringExtra("CHANNEL_ID");
+		
+		this.mChannelId = channelId;
 		
 		Log.d(TAG, ": onActivityResult: purhcaseData: " + purhcaseData);
 		Log.d(TAG, ": onActivityResult: purchaseSignedData: " + purchaseSignedData);
@@ -493,6 +495,13 @@ public class MainActivity extends Activity {
                 return;
             }
 
+            if(!callVerifyPurchase(purchase))
+            {
+            	complain("Error purchasing. Api Service for receipt verification has just failed");
+                setWaitScreen(false);
+                return;
+            }
+            
             if(manualPurchaseSignatureVerify(purchase.getOriginalJson(), purchase.getSignature()))
             {
             	Log.i(TAG, "Purchase signature verification SUCCESS.");
@@ -675,7 +684,6 @@ public class MainActivity extends Activity {
 	public boolean callVerifyPurchase(Purchase purchase)
 	{
 		Log.w(TAG, " ========= Verify Purchase warning network operation on UI Thread =============");
-		String channel = purchase.getDeveloperPayload();
 		String packagename = getPackageName();
 		String sku = purchase.getSku();
 		String token = purchase.getToken();
@@ -686,9 +694,18 @@ public class MainActivity extends Activity {
 		
 		try
 		{
-			VerifyPurchaseResponse verifyPurchaseResponse = PurchaseVerificationHelper.verifyPurchase(channel, packagename, sku, token);
+			VerifyPurchaseResponse verifyPurchaseResponse = PurchaseVerificationHelper.verifyPurchase(mChannelId, packagename, sku, token);
 			Log.d(TAG, "Verify Purchase success: verifyPurchaseResponse= " + verifyPurchaseResponse.toString());
-			return true;
+			Log.d(TAG, "callAsyncVerifyPurchase: onVerifySuccess: VerifyResponse: " + verifyPurchaseResponse);
+			Log.d(TAG, "callAsyncVerifyPurchase: onVerifySuccess: Sent Developer Payload: " + DEVELOPER_PAYLOAD);
+			Log.d(TAG, "callAsyncVerifyPurchase: onVerifySuccess: Received Developer Payload: " + verifyPurchaseResponse.getDeveloperPayload());
+			boolean isValid = DEVELOPER_PAYLOAD.equals(verifyPurchaseResponse.getDeveloperPayload());
+			if(isValid)
+				Log.d(TAG, "callAsyncVerifyPurchase: Purchase Receipt is VALID");
+			else 
+				Log.e(TAG, "callAsyncVerifyPurchase: Purchase Receipt  is NOT VALID");
+			
+			return isValid;
 		}
 		catch (ClientProtocolException e)
 		{
@@ -710,24 +727,31 @@ public class MainActivity extends Activity {
 	public void callAsyncVerifyPurchase(Purchase purchase)
 	{
 		Log.d(TAG, " ======= Calling verify purchase on Async Task =============");
-		String channel = purchase.getDeveloperPayload();
 		String packagename = getPackageName();
 		String sku = purchase.getSku();
 		String token = purchase.getToken();
 		
-		PurchaseVerificationHelper.asyncVerifyPurchase(channel, packagename, sku, token, new VerifyPurchaseListener()
+		PurchaseVerificationHelper.asyncVerifyPurchase(mChannelId, packagename, sku, token, new VerifyPurchaseListener()
 		{
 			
 			@Override
-			public void onVerifySuccess(VerifyPurchaseResponse verifyPurchaseResponse)
+			public void onApiVerifyServiceSuccess(VerifyPurchaseResponse verifyPurchaseResponse)
 			{
-				Log.d(TAG, "Verify Purchase success: verifyPurchaseResponse= " + verifyPurchaseResponse.toString());
+				Log.d(TAG, "Verify Purchase success: onApiVerifyServiceSuccess= " + verifyPurchaseResponse.toString());
+				Log.d(TAG, "callAsyncVerifyPurchase: onVerifySuccess: VerifyResponse: " + verifyPurchaseResponse);
+				Log.d(TAG, "callAsyncVerifyPurchase: onVerifySuccess: Sent Developer Payload: " + DEVELOPER_PAYLOAD);
+				Log.d(TAG, "callAsyncVerifyPurchase: onVerifySuccess: Received Developer Payload: " + verifyPurchaseResponse.getDeveloperPayload());
+				boolean isValid = DEVELOPER_PAYLOAD.equals(verifyPurchaseResponse.getDeveloperPayload());
+				if(isValid)
+					Log.d(TAG, "callAsyncVerifyPurchase: Purchase Receipt is VALID");
+				else 
+					Log.e(TAG, "callAsyncVerifyPurchase: Purchase Receipt  is NOT VALID");
 			}
 			
 			@Override
-			public void onVerifyFailure()
+			public void onApiVerifyServiceFailure(Exception exception)
 			{
-				Log.e(TAG, "Verify Purchase Failed: verifyPurchaseResponse= ");
+				Log.e(TAG, "Verify Purchase Failed: onApiVerifyServiceFailure= Error: " + exception);
 			}
 		});
 	}

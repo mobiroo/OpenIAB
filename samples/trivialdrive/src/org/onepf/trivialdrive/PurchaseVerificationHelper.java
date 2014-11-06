@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -15,7 +14,6 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.json.JSONException;
-
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -80,6 +78,7 @@ public class PurchaseVerificationHelper
 		private String sku;
 		private String token;
 		private VerifyPurchaseListener verifyPurchaseListener;
+		private Exception exception;
 		
 		public VerifyReceiptTask(String channel, String packagename, String sku, String token, VerifyPurchaseListener verifyPurchaseListener)
 		{
@@ -103,16 +102,19 @@ public class PurchaseVerificationHelper
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				exception = e;
 			}
 			catch (IOException e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				exception = e;
 			}
 			catch (JSONException e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				exception = e;
 			}
 			return null;
 		}
@@ -123,9 +125,9 @@ public class PurchaseVerificationHelper
 			if(verifyPurchaseListener!=null)
 			{
 				if(result!=null)
-					verifyPurchaseListener.onVerifySuccess(result);
+					verifyPurchaseListener.onApiVerifyServiceSuccess(result);
 				else 
-					verifyPurchaseListener.onVerifyFailure();
+					verifyPurchaseListener.onApiVerifyServiceFailure(exception);
 			}
 		}
 		
@@ -133,7 +135,7 @@ public class PurchaseVerificationHelper
 	
 	public interface VerifyPurchaseListener
 	{
-		abstract public void onVerifySuccess(VerifyPurchaseResponse VerifyResponse);
-		abstract public void onVerifyFailure();
+		abstract public void onApiVerifyServiceSuccess(VerifyPurchaseResponse VerifyResponse);
+		abstract public void onApiVerifyServiceFailure(Exception exception);
 	}
 }
