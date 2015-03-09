@@ -25,7 +25,6 @@ public class HttpUtils
             trustStore.load(null, null);
 
             SSLSocketFactory sf = new EasySSLSocketFactory(trustStore);
-            sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
             HttpParams params = new BasicHttpParams();
             if (reqParams == null)
