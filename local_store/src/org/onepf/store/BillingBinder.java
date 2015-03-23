@@ -173,6 +173,7 @@ public class BillingBinder extends IOpenInAppBillingService.Stub {
             } else {
                 purchaseIntent.putExtra("packageName", packageName);
                 purchaseIntent.putExtra("sku", sku);
+                purchaseIntent.putExtra("developerPayload", developerPayload);
                 result.putInt(RESPONSE_CODE, BillingBinder.RESULT_OK);
             }
         }
