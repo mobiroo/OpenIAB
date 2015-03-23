@@ -210,6 +210,29 @@ Where:
            }
        }
     ```
+Response: 
+If successful, this method should return response as JSON string in the following format 
+ 
+```
+{
+	"kind": "androidpublisher#inappPurchase",
+	"purchaseTime": {long},
+  	"purchaseState": {integer},
+  	"consumptionState": {integer},
+  	"developerPayload": {string}
+}
+```
+
+|name|value|description|
+|----|-----|-----------|
+|kind|string|This kind represents a inappPurchase object in the Appstore|
+|purchaseTime|long|The time the product was purchased, in millis since the epoch (Jan 1, 1970).|
+|purchaseState|int|Purchase state. Possible values: 0 - Purchases, 1 - Canceled|
+|consuptionState|int|Consumption state. Possible values: 0 - Consumed, 1 - to be consumed|
+|developerPayload|string|A developer-specified string that contains supplemental information about an order.|
+
+**Note**: More instruction on how to implement OpenIAB can be found on the following link
+https://github.com/mobiroo/OpenIAB/blob/master/specification/How-to_Implement_OpenIAB_in_Appstore.md
 
 Unity Plugin
 =====
