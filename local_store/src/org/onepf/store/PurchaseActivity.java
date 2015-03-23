@@ -22,7 +22,7 @@ public class PurchaseActivity extends Activity {
         setResult(BillingBinder.RESULT_OK, intent);
         finish();
     }
-
+ 
     public void onOkClick(View view) {
         Intent intent = getIntent();
         Database db = ((StoreApplication) getApplication()).getDatabase();
@@ -42,6 +42,8 @@ public class PurchaseActivity extends Activity {
             intent.putExtra(BillingBinder.INAPP_DATA_SIGNATURE, "");
         }
 
+        final String channelId = "mobiroo";
+        intent.putExtra("CHANNEL_ID", channelId);
         setResult(BillingBinder.RESULT_OK, intent);
         finish();
     }
