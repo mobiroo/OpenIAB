@@ -210,7 +210,9 @@ Where:
            }
        }
     ```
+
 Response: 
+
 If successful, this method should return response as JSON string in the following format 
  
 ```
