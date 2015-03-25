@@ -184,7 +184,7 @@ key. Developers are advised to override the onActivityResult method and extract 
            Log.d("Channel ID = " + channelId);
        }
     ```
-if you are using the Unity plug-in,you can get the channel id through the <a href="https://github.com/mobiroo/OpenIAB/blob/master/unity_plugin/src/org/onepf/openiab/UnityProxyActivity.java">UnityProxyActivity</a>.
+if you are using the **Unity plug-in**, you can get the channel id through the <a href="https://github.com/mobiroo/OpenIAB/blob/master/unity_plugin/src/org/onepf/openiab/UnityProxyActivity.java">UnityProxyActivity</a>.
 ```java
  @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -192,7 +192,7 @@ if you are using the Unity plug-in,you can get the channel id through the <a hre
 
         // Pass on the activity result to the helper for handling
         if (!UnityPlugin.instance().getHelper().handleActivityResult(requestCode, resultCode, data)) {
-	   //please check your request code first
+            //please check your request code first
            String channelId = data.getStringExtra("CHANNEL_ID");
            Log.d("Channel ID = " + channelId);
             // not handled, so handle it ourselves (here's where you'd
@@ -209,12 +209,12 @@ if you are using the Unity plug-in,you can get the channel id through the <a hre
 
 The actual Receipt Verification service endpoint is constructed as follows:
     ```
-       https://{channelname}.mobileplatform.solutions/api/v1.0/openiab/verify/{packagename}/inapp/{sku}/purchases/{token}
+       https://{channelId}.mobileplatform.solutions/api/v1.0/openiab/verify/{packagename}/inapp/{sku}/purchases/{token}
     ```
 
 Where:
 
-* **{channelname}** is replaced with the string received in onActivityResult().
+* **{channelId}** is replaced with the string received in onActivityResult().
 * **{packagename}** is replaced with the package name of your application.
 * **{sku}** is replaced with the Mobiroo Appstore SKU as entered into the Mobiroo portal site.
 * **{token}** is replaced with the transaction token received with the Purchase record.
