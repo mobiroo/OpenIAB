@@ -184,6 +184,29 @@ key. Developers are advised to override the onActivityResult method and extract 
            Log.d("Channel ID = " + channelId);
        }
     ```
+if you are using the Unity plug-in,you can get the channel id through the <a href="https://github.com/mobiroo/OpenIAB/blob/master/unity_plugin/src/org/onepf/openiab/UnityProxyActivity.java">UnityProxyActivity</a>.
+```java
+ @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(UnityPlugin.TAG, "onActivityResult(" + requestCode + ", " + resultCode + ", " + data);
+
+        // Pass on the activity result to the helper for handling
+        if (!UnityPlugin.instance().getHelper().handleActivityResult(requestCode, resultCode, data)) {
+	   //please check your request code first
+           String channelId = data.getStringExtra("CHANNEL_ID");
+           Log.d("Channel ID = " + channelId);
+            // not handled, so handle it ourselves (here's where you'd
+            // perform any handling of activity results not related to in-app
+            // billing...
+            super.onActivityResult(requestCode, resultCode, data);
+        } else {
+            Log.d(UnityPlugin.TAG, "onActivityResult handled by IABUtil.");
+        }
+
+        finish();
+    }
+```
+
 The actual Receipt Verification service endpoint is constructed as follows:
     ```
        https://{channelname}.mobileplatform.solutions/api/v1.0/openiab/verify/{packagename}/inapp/{sku}/purchases/{token}
