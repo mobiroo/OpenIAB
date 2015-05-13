@@ -27,6 +27,7 @@ public class MobirooAppstore extends OpenAppstore
 		if (isDebugLog()) Log.d(TAG, "MobirooAppstore: Constructor");
 		
 		if (billingIntent != null) {
+			billingIntent.setPackage(MOBIROO_PACKAGE_NAME);
 			this.mBillingService = new MobirooIabHelper(context, publicKey, this)
 			{
 				@Override
