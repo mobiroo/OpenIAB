@@ -41,6 +41,8 @@ public class AppstoreBinder extends IOpenAppstore.Stub {
 
     @Override
     public Intent getBillingServiceIntent() throws RemoteException {
+    	Intent intent = new Intent(BILLING_BIND_INTENT);
+    	intent.setPackage(_context.getPackageName());
         return new Intent(BILLING_BIND_INTENT);
     }
 

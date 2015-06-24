@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.mobiroo.xgen"
-          android:versionCode="2"
-          android:versionName="1.1">
+          android:versionCode="3"
+          android:versionName="1.2">
     
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17"/>
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="22"/>
     
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     
-    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher" android:name="org.onepf.store.StoreApplication">
+    <application android:label="@string/app_name" 
+        android:icon="@drawable/ic_launcher" 
+        android:allowBackup="false"
+        android:name="org.onepf.store.StoreApplication">
     
         <activity android:name="org.onepf.store.StoreActivity"
                   android:label="@string/app_name">
@@ -23,13 +26,17 @@
                   android:process=":remote">
         </activity>
         
-        <service android:exported="true" android:name="org.onepf.store.AppstoreService" android:process=":remote">
+        <service android:exported="true" 
+            android:name="org.onepf.store.AppstoreService" 
+            android:process=":remote">
             <intent-filter >
                 <action android:name="org.onepf.oms.openappstore.BIND"/>
             </intent-filter>
         </service>
         
-        <service android:exported="true" android:name="org.onepf.store.BillingService" android:process=":remote">
+        <service android:exported="true" 
+            android:name="org.onepf.store.BillingService" 
+            android:process=":remote">
             <intent-filter >
                 <action android:name="org.onepf.oms.billing.BIND"/>
             </intent-filter>
