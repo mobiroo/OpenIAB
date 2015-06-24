@@ -408,20 +408,22 @@ public class MainActivity extends Activity {
     	Log.d(TAG, "============== Processing purchase on activity result =================");
         Log.d(TAG, "onActivityResult() requestCode: " + requestCode+ " resultCode: " + resultCode+ " data: " + data);
 
-        String purhcaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
-		String purchaseSignedData = data.getStringExtra("INAPP_DATA_SIGNATURE");
-		String channelId = data.getStringExtra("CHANNEL_ID");
-		
-		this.mChannelId = channelId;
-		
-		Log.d(TAG, ": onActivityResult: purhcaseData: " + purhcaseData);
-		Log.d(TAG, ": onActivityResult: purchaseSignedData: " + purchaseSignedData);
-		Log.d(TAG, ": onActivityResult: channelId: " + channelId);
-        
-		Log.d(TAG, "===== DO Manual sign verification on onActivityResult ============");
-		boolean valid = Security.verifyPurchase(MOBIROO_PUB_KEY, purhcaseData, purchaseSignedData);
-		Log.d(TAG, "manualPurchaseSignatureVerify: Result= " + ((valid)?"Purchase signed data is VALID":"Purchase signed data is NOT VALID"));
-		
+        if(data!=null)
+        {
+	        String purhcaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
+			String purchaseSignedData = data.getStringExtra("INAPP_DATA_SIGNATURE");
+			String channelId = data.getStringExtra("CHANNEL_ID");
+			
+			this.mChannelId = channelId;
+			
+			Log.d(TAG, ": onActivityResult: purhcaseData: " + purhcaseData);
+			Log.d(TAG, ": onActivityResult: purchaseSignedData: " + purchaseSignedData);
+			Log.d(TAG, ": onActivityResult: channelId: " + channelId);
+	        
+			Log.d(TAG, "===== DO Manual sign verification on onActivityResult ============");
+			boolean valid = Security.verifyPurchase(MOBIROO_PUB_KEY, purhcaseData, purchaseSignedData);
+			Log.d(TAG, "manualPurchaseSignatureVerify: Result= " + ((valid)?"Purchase signed data is VALID":"Purchase signed data is NOT VALID"));
+        }
         // Pass on the activity result to the helper for handling
         if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
             // not handled, so handle it ourselves (here's where you'd
