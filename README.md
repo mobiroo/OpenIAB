@@ -1,3 +1,5 @@
+THIS PROJECT IS DEPRECATED. Please use standard openiab library.
+
 How To add OpenIAB into an app for the Mobiroo Appstore
 =====
 1. Download the latest version of OpenIAB.jar from the Mobiroo portal stie and attach it to the project.
