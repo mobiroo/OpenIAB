@@ -1,4 +1,4 @@
-THIS PROJECT IS DEPRECATED. Please use standard openiab library.
+# THIS PROJECT IS DEPRECATED. Please use standard [openiab library ](https://github.com/onepf/OpenIAB).
 
 How To add OpenIAB into an app for the Mobiroo Appstore
 =====
