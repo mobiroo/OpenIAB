@@ -333,7 +333,7 @@ support all known Appstores. In that light, Mobiroo has opted to completely fork
 is in the process of re-writing all documentation, sample apps and the local testing store for specific use by Mobiroo 3rd party
 developers.
 
-Mobiroo pledges to maintain this repository in perpetuity and to push all useful changes back to the main OnePF OpenIAB project in due time.
+-Mobiroo pledges to maintain this repository in perpetuity and to push all useful changes back to the main OnePF OpenIAB project in due time.-
 
 License
 =====
